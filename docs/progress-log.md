@@ -62,4 +62,11 @@
   - Replaced `/calculator` placeholder with interactive `CalculatorPage.tsx` and responsive SVG charts (`SolarCharts.tsx`), year-by-year cash-flow table, and accuracy disclaimers.
   - Documented formulas and limitations in `docs/solar-roi-calculator.md`, `docs/api-and-models.md`, and `README.md`.
 
+## Milestone 08 — National Renewable Energy Dashboard
+- **Status:** Completed
+- **Scope & Verified Results:**
+  - Added `GET /api/v1/dashboard/national` (`nationalDashboardService.ts`, `dashboardSchemas.ts`, `dashboardController.ts`) aggregating stored `EnergyMetric` records into KPIs, energy mix, state rankings, chronological trends, and source-attributed recent updates, returning `null` (never `0`) for missing metrics.
+  - Replaced `/` placeholder in `HomePage.tsx` with the full National Dashboard (`DashboardCharts.tsx`, KPI cards, state rankings, recent updates, filters, `DEMO` notices, loading/empty/error/`503` states, and `SystemStatusPanel`).
+  - Documented in `docs/national-dashboard.md`, `docs/api-and-models.md`, and `README.md`.
+
 

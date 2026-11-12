@@ -4,6 +4,7 @@ import {
   postSaveSolarCalculation,
   postSimulateSolarRoi,
 } from '../controllers/calculatorController.js';
+import { getNationalDashboard } from '../controllers/dashboardController.js';
 import {
   deleteSource,
   getIngestionRun,
@@ -56,6 +57,7 @@ import {
   listCalculatorHistoryQuerySchema,
   solarRoiSimulateSchema,
 } from '../schemas/calculatorSchemas.js';
+import { nationalDashboardQuerySchema } from '../schemas/dashboardSchemas.js';
 
 const router = Router();
 
@@ -189,6 +191,13 @@ router.post(
   requireAdminAuth,
   validateRequest({ body: solarRoiSimulateSchema }),
   postSaveSolarCalculation
+);
+
+router.get(
+  '/dashboard/national',
+  requireDatabase,
+  validateRequest({ query: nationalDashboardQuerySchema }),
+  getNationalDashboard
 );
 
 export default router;

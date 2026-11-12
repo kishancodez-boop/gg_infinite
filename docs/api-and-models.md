@@ -121,4 +121,12 @@ All list endpoints validate query parameters via **Zod** and return a consistent
   - `GET /api/v1/calculator/history` & `POST /api/v1/calculator/history` — Protected by both `requireDatabase` (`503`) and fail-closed `requireAdminAuth` (`403`/`401`).
 - See `docs/solar-roi-calculator.md` for formulas, edge-case rules, and disclaimers.
 
+---
+
+## 9. Milestone 08 — National Renewable Energy Dashboard
+
+- **Endpoint:** `GET /api/v1/dashboard/national` (public read, guarded by `requireDatabase` -> `503 DATABASE_UNAVAILABLE`).
+- **Query Params:** `dataMode` (`all` | `verified` | `demo`), `stateOrRegion`, `technology` (`all` | `solar` | `wind` | `other`), `fromDate`, `toDate`.
+- See `docs/national-dashboard.md` for aggregation rules, `"Not available"` null handling, and limitations.
+
 
