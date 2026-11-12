@@ -67,6 +67,19 @@ export type PolicyCategory = (typeof POLICY_CATEGORIES)[number];
 export const POLICY_RECORD_KINDS = ['policy', 'scheme'] as const;
 export type PolicyRecordKind = (typeof POLICY_RECORD_KINDS)[number];
 
+export const SCHEME_CATEGORIES = [
+  'subsidy',
+  'incentive',
+  'regulatory_policy',
+  'tariff_order',
+  'mission',
+  'other',
+] as const;
+export type SchemeCategory = (typeof SCHEME_CATEGORIES)[number];
+
+export const POLICY_STATUSES = ['active', 'inactive', 'unknown'] as const;
+export type PolicyStatus = (typeof POLICY_STATUSES)[number];
+
 export const RPO_CATEGORIES = [
   'solar',
   'non_solar',

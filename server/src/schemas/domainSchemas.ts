@@ -7,7 +7,9 @@ import {
   INGESTION_STATUSES,
   POLICY_CATEGORIES,
   POLICY_RECORD_KINDS,
+  POLICY_STATUSES,
   RPO_CATEGORIES,
+  SCHEME_CATEGORIES,
   SOURCE_TYPES,
   VERIFICATION_STATUSES,
 } from '../types/domain.js';
@@ -79,10 +81,15 @@ export const createMetricSchema = z.object({
 });
 
 export const listPoliciesQuerySchema = baseListQuerySchema.extend({
-  sortBy: z.enum(['effectiveDate', 'createdAt', 'title']).default('createdAt'),
+  sortBy: z.enum(['effectiveDate', 'lastVerifiedAt', 'createdAt', 'title']).default('createdAt'),
   category: z.enum(POLICY_CATEGORIES).optional(),
+  technology: z.enum(POLICY_CATEGORIES).optional(),
+  schemeCategory: z.enum(SCHEME_CATEGORIES).optional(),
   jurisdiction: z.enum(['central', 'state']).optional(),
-  recordKind: z.enum(POLICY_RECORD_KINDS).optional(),
+  stateOrRegion: z.string().trim().max(120).optional(),
+  issuingOrganization: z.string().trim().max(200).optional(),
+  status: z.enum(POLICY_STATUSES).optional(),
+  recordKind: z.enum([...POLICY_RECORD_KINDS, 'all']).optional(),
 });
 
 export const createPolicySchema = z.object({
@@ -91,10 +98,16 @@ export const createPolicySchema = z.object({
   issuingOrganization: z.string().trim().min(2).max(200),
   recordKind: z.enum(POLICY_RECORD_KINDS).optional(),
   category: z.enum(POLICY_CATEGORIES),
+  technology: z.enum(POLICY_CATEGORIES).optional(),
+  schemeCategory: z.enum(SCHEME_CATEGORIES).default('other'),
+  status: z.enum(POLICY_STATUSES).default('unknown'),
   jurisdiction: z.enum(['central', 'state']).default('central'),
   stateOrRegion: z.string().trim().max(120).optional().nullable(),
   officialUrl: httpUrlSchema,
   effectiveDate: z.coerce.date().optional().nullable(),
+  expiryDate: z.coerce.date().optional().nullable(),
+  eligibility: z.string().trim().max(2000).optional().nullable(),
+  lastVerifiedAt: z.coerce.date().optional().nullable(),
   sourceRef: objectIdSchema,
   verificationStatus: z.enum(VERIFICATION_STATUSES).default('unverified'),
   isDemoData: z.boolean().default(false),

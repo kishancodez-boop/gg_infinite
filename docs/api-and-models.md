@@ -99,6 +99,16 @@ All list endpoints validate query parameters via **Zod** and return a consistent
   - `GET /api/v1/rea/review-queue/:id` — detailed staged record with provenance and change summary.
   - `POST /api/v1/rea/review-queue/:id/decision` (`requireAdminAuth`) — `approve`, `reject`, or `request_correction` (with optional `publishOnApprove`).
   - `POST /api/v1/rea/review-queue/:id/publish` (`requireAdminAuth`) — publishes only `approved` records to `EnergyMetric`.
-  - `GET /api/v1/rea/audit-logs` — paginated `AuditProvenance` log.
+  - `GET /api/v1/rea/audit-logs` (`requireAdminAuth`) — paginated `AuditProvenance` log.
+
+---
+
+## 7. Milestone 06 — Policies & Government Schemes Explorer
+
+- **Model Extended:** `PolicyScheme` (`server/src/models/PolicyScheme.ts`) with `technology`, `schemeCategory`, `status` (`active` | `inactive` | `unknown`), `expiryDate`, `eligibility`, and `lastVerifiedAt`.
+- **Endpoints:**
+  - `GET /api/v1/policies`, `GET /api/v1/policies/:id`, `GET /api/v1/schemes`, `GET /api/v1/schemes/:id` (public reads supporting `recordKind=all`, `technology`, `schemeCategory`, `jurisdiction`, `stateOrRegion`, `issuingOrganization`, `status`, `dataMode`, `search`, and pagination).
+  - `POST /api/v1/policies`, `POST /api/v1/schemes` (protected by fail-closed `requireAdminAuth`).
+- See `docs/policies-and-schemes.md` for full filter documentation and provenance rules.
 
 

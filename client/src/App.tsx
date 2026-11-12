@@ -7,6 +7,7 @@ import { MainLayout } from './layouts/MainLayout';
 import { AdminSourcesPage } from './pages/AdminSourcesPage';
 import { HomePage } from './pages/HomePage';
 import { ModulePlaceholderPage } from './pages/ModulePlaceholderPage';
+import { PoliciesPage } from './pages/PoliciesPage';
 
 const queryClient = new QueryClient();
 
@@ -30,21 +31,7 @@ export function AppRoutes() {
             />
           }
         />
-        <Route
-          path="/policies"
-          element={
-            <ModulePlaceholderPage
-              title="Policies & Schemes Explorer"
-              breadcrumbLabel="Policies & Schemes"
-              description="Searchable repository of central and state renewable-energy policies, subsidies, eligibility criteria, deadlines, and official documents."
-              plannedFeatures={[
-                'Filter by jurisdiction (Central / State), stakeholder group, and scheme status.',
-                'Direct links to official government portals and last-verified timestamps.',
-                'Stale-data indicators when verification dates exceed freshness thresholds.',
-              ]}
-            />
-          }
-        />
+        <Route path="/policies" element={<PoliciesPage />} />
         <Route
           path="/rpo"
           element={

@@ -138,14 +138,34 @@ export async function listPoliciesOrSchemes(
   const filter: FilterQuery<PolicySchemeDocument> = {
     ...buildDataModeFilter(query.dataMode),
   };
-  const kind = query.recordKind ?? defaultKind;
+  const kind = query.recordKind === 'all' ? undefined : (query.recordKind ?? defaultKind);
   if (kind) filter.recordKind = kind;
   if (query.verificationStatus) filter.verificationStatus = query.verificationStatus;
   if (query.category) filter.category = query.category;
+  if (query.schemeCategory) filter.schemeCategory = query.schemeCategory;
   if (query.jurisdiction) filter.jurisdiction = query.jurisdiction;
+  if (query.status) filter.status = query.status;
+  if (query.stateOrRegion) {
+    filter.stateOrRegion = new RegExp(escapeRegex(query.stateOrRegion), 'i');
+  }
+  if (query.issuingOrganization) {
+    filter.issuingOrganization = new RegExp(escapeRegex(query.issuingOrganization), 'i');
+  }
+
+  const andConditions: FilterQuery<PolicySchemeDocument>[] = [];
+  if (query.technology) {
+    andConditions.push({
+      $or: [{ technology: query.technology }, { category: query.technology }],
+    });
+  }
   if (query.search) {
     const regex = new RegExp(escapeRegex(query.search), 'i');
-    filter.$or = [{ title: regex }, { description: regex }, { issuingOrganization: regex }];
+    andConditions.push({
+      $or: [{ title: regex }, { description: regex }, { issuingOrganization: regex }],
+    });
+  }
+  if (andConditions.length > 0) {
+    filter.$and = andConditions;
   }
 
   return executePaginatedQuery<PolicySchemeDocument>({
@@ -162,7 +182,9 @@ export async function listPoliciesOrSchemes(
 export async function getPolicyOrSchemeById(id: string, expectedKind?: PolicyRecordKind) {
   const filter: FilterQuery<PolicySchemeDocument> = { _id: id };
   if (expectedKind) filter.recordKind = expectedKind;
-  const doc = await PolicySchemeModel.findOne(filter).lean();
+  const doc = await PolicySchemeModel.findOne(filter)
+    .populate('sourceRef', 'sourceName organization domain sourceUrl verificationStatus')
+    .lean();
   if (!doc) throw new AppError('Policy or scheme not found', 404, 'RESOURCE_NOT_FOUND');
   return doc;
 }
@@ -173,6 +195,7 @@ export async function createPolicyOrScheme(
 ) {
   const created = await PolicySchemeModel.create({
     ...payload,
+    technology: payload.technology ?? payload.category,
     recordKind: payload.recordKind ?? defaultKind,
   });
   return created.toObject();

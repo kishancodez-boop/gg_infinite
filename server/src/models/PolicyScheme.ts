@@ -2,6 +2,8 @@ import mongoose, { Schema, type InferSchemaType } from 'mongoose';
 import {
   POLICY_CATEGORIES,
   POLICY_RECORD_KINDS,
+  POLICY_STATUSES,
+  SCHEME_CATEGORIES,
   VERIFICATION_STATUSES,
 } from '../types/domain.js';
 
@@ -36,6 +38,22 @@ const policySchemeSchema = new Schema(
       required: true,
       enum: POLICY_CATEGORIES,
     },
+    technology: {
+      type: String,
+      enum: POLICY_CATEGORIES,
+      default: 'general',
+    },
+    schemeCategory: {
+      type: String,
+      enum: SCHEME_CATEGORIES,
+      default: 'other',
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: POLICY_STATUSES,
+      default: 'unknown',
+    },
     jurisdiction: {
       type: String,
       required: true,
@@ -57,6 +75,20 @@ const policySchemeSchema = new Schema(
       },
     },
     effectiveDate: {
+      type: Date,
+      default: null,
+    },
+    expiryDate: {
+      type: Date,
+      default: null,
+    },
+    eligibility: {
+      type: String,
+      trim: true,
+      maxlength: 2000,
+      default: null,
+    },
+    lastVerifiedAt: {
       type: Date,
       default: null,
     },

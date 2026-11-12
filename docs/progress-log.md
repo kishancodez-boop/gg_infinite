@@ -46,4 +46,12 @@
   - Extended `/admin` (`AdminSourcesPage.tsx`) with `Tabs` for `Source Registry`, `REA Ingestion`, and `Review Queue`.
   - Documented architecture and guardrails in `docs/rea-ingestion.md` and `docs/api-and-models.md`.
 
+## Milestone 06 — Policies & Government Schemes Explorer
+- **Status:** Completed
+- **Scope & Verified Results:**
+  - Extended `PolicyScheme` model, Zod query/create schemas, and `domainService` to support `technology`, `schemeCategory`, `status`, `stateOrRegion`, `issuingOrganization`, `recordKind=all`, `eligibility`, `expiryDate`, `lastVerifiedAt`, and populated `sourceRef`.
+  - Protected `POST /api/v1/policies` and `POST /api/v1/schemes` with fail-closed `requireAdminAuth` while keeping read endpoints public.
+  - Built the full `/policies` Explorer (`client/src/pages/PoliciesPage.tsx`, `policyService.ts`, `usePolicies.ts`) with `All` / `Policies` / `Schemes` tabs, debounced search + clear button, multi-facet filters, `DEMO` labeling, detail drawer with `"Not available"` fallbacks, and loading/empty/error/`503` states.
+  - Documented in `docs/policies-and-schemes.md`, `docs/api-and-models.md`, and `README.md`.
+
 

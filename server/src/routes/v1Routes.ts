@@ -85,12 +85,22 @@ router.post('/metrics', validateRequest({ body: createMetricSchema }), postMetri
 const policyHandlers = makePolicyHandlers('policy');
 router.get('/policies', validateRequest({ query: listPoliciesQuerySchema }), policyHandlers.list);
 router.get('/policies/:id', validateRequest({ params: idParamSchema }), policyHandlers.getById);
-router.post('/policies', validateRequest({ body: createPolicySchema }), policyHandlers.create);
+router.post(
+  '/policies',
+  requireAdminAuth,
+  validateRequest({ body: createPolicySchema }),
+  policyHandlers.create
+);
 
 const schemeHandlers = makePolicyHandlers('scheme');
 router.get('/schemes', validateRequest({ query: listPoliciesQuerySchema }), schemeHandlers.list);
 router.get('/schemes/:id', validateRequest({ params: idParamSchema }), schemeHandlers.getById);
-router.post('/schemes', validateRequest({ body: createPolicySchema }), schemeHandlers.create);
+router.post(
+  '/schemes',
+  requireAdminAuth,
+  validateRequest({ body: createPolicySchema }),
+  schemeHandlers.create
+);
 
 router.get('/rpo', validateRequest({ query: listRpoQuerySchema }), getRpoRecords);
 router.get('/rpo/:id', validateRequest({ params: idParamSchema }), getRpoRecord);
