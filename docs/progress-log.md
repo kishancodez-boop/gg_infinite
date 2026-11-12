@@ -37,3 +37,13 @@
   - Added `PATCH /api/v1/sources/:id` and `DELETE /api/v1/sources/:id`, protected all source write routes with fail-closed `requireAdminAuth` (`server/src/middleware/adminAuth.ts`), and added `npm --prefix server run seed:sources`.
   - Built the read-only Source Registry UI on `/admin` (`client/src/pages/AdminSourcesPage.tsx`) with search, category/verification/active filters, pagination, detail drawer, and honest `503` DB-unavailable state.
 
+## Milestone 05 — REA Safe Data Ingestion Engine
+- **Status:** Completed
+- **Scope & Verified Results:**
+  - Added `StagedRecord` Mongoose model and extended `IngestionRun` and `AuditProvenance` models for dry-run tracking, duplicate/change counts, validation errors, and review/publish audit actions.
+  - Implemented modular REA pipeline under `server/src/services/rea/`: `permissionGuard.ts` (blocks `manual`, `needs_review`, inactive sources, and SSRF/private/non-HTTPS URLs), `parsers.ts` (CSV/JSON + SHA-256 hashing), `normalizerAndValidator.ts`, `dedupeAndDiff.ts`, `fixtureConnector.ts` (`[DEMO]` CSV/JSON fixtures), `reaPipelineService.ts`, and `reviewService.ts`.
+  - Added `/api/v1/rea/*` endpoints (`ingest`, `review-queue`, `decision`, `publish`, `audit-logs`) protected by `requireDatabase` (`503`) and `requireAdminAuth` (`401`/`403`).
+  - Extended `/admin` (`AdminSourcesPage.tsx`) with `Tabs` for `Source Registry`, `REA Ingestion`, and `Review Queue`.
+  - Documented architecture and guardrails in `docs/rea-ingestion.md` and `docs/api-and-models.md`.
+
+

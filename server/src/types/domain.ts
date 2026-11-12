@@ -92,8 +92,34 @@ export const AUDIT_RECORD_TYPES = [
   'PolicyScheme',
   'RpoRecord',
   'IngestionRun',
+  'StagedRecord',
 ] as const;
 export type AuditRecordType = (typeof AUDIT_RECORD_TYPES)[number];
+
+export const REVIEW_STATUSES = [
+  'pending_review',
+  'approved',
+  'rejected',
+  'needs_correction',
+] as const;
+export type ReviewStatus = (typeof REVIEW_STATUSES)[number];
+
+export const CHANGE_TYPES = ['new', 'unchanged', 'updated'] as const;
+export type ChangeType = (typeof CHANGE_TYPES)[number];
+
+export const INGESTION_MODES = ['live', 'fixture'] as const;
+export type IngestionMode = (typeof INGESTION_MODES)[number];
+
+export const AUDIT_ACTIONS = [
+  'staged',
+  'dry_run',
+  'approved',
+  'rejected',
+  'correction_requested',
+  'published',
+  'blocked',
+] as const;
+export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
 export const DATA_MODES = ['verified', 'demo', 'all'] as const;
 export type DataMode = (typeof DATA_MODES)[number];

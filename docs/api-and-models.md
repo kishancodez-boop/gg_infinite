@@ -88,3 +88,17 @@ All list endpoints validate query parameters via **Zod** and return a consistent
    npm --prefix server run seed:demo
    ```
 
+---
+
+## 6. Milestone 05 — REA Safe Ingestion & Review API
+
+- **Model Added:** `StagedRecord` (`server/src/models/StagedRecord.ts`), plus extended `IngestionRun` (`isDryRun`, `sourceMode`, `recordsDuplicate`, `recordsChanged`, `validationErrors`, `fixtureLabel`) and `AuditProvenance` (`action`, `actor`).
+- **Endpoints (all guarded by `requireDatabase` -> `503 DATABASE_UNAVAILABLE`):**
+  - `POST /api/v1/rea/ingest` (`requireAdminAuth`) — runs dry-run preview or stages `new`/`updated` records from `fixture` (`DEMO`) or permitted `live` source.
+  - `GET /api/v1/rea/review-queue` — paginated `StagedRecord` list with `reviewStatus` and `changeType` filters.
+  - `GET /api/v1/rea/review-queue/:id` — detailed staged record with provenance and change summary.
+  - `POST /api/v1/rea/review-queue/:id/decision` (`requireAdminAuth`) — `approve`, `reject`, or `request_correction` (with optional `publishOnApprove`).
+  - `POST /api/v1/rea/review-queue/:id/publish` (`requireAdminAuth`) — publishes only `approved` records to `EnergyMetric`.
+  - `GET /api/v1/rea/audit-logs` — paginated `AuditProvenance` log.
+
+

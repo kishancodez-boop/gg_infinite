@@ -224,4 +224,17 @@ describe('Milestone 02 Application Shell & Routes', () => {
     expect(await screen.findByRole('dialog')).toBeTruthy();
     expect(await screen.findByText('Official gov.in domain confirmed.')).toBeTruthy();
   });
+
+  it('renders REA Ingestion and Review Queue tabs on /admin with DEMO fixture label', async () => {
+    renderAtRoute('/admin');
+
+    const ingestionTab = await screen.findByRole('tab', { name: /REA Ingestion/i });
+    fireEvent.click(ingestionTab);
+    expect(await screen.findByText('REA Safe Ingestion Runner')).toBeTruthy();
+    expect(screen.getByText('DEMO Fixture Safe Mode')).toBeTruthy();
+
+    const reviewTab = screen.getByRole('tab', { name: /Review Queue/i });
+    fireEvent.click(reviewTab);
+    expect(await screen.findByText('Human Review & Approval Queue')).toBeTruthy();
+  });
 });

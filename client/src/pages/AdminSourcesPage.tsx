@@ -1,15 +1,19 @@
 import axios from 'axios';
 import {
   CheckCircle2,
+  ClipboardCheck,
   Clock,
   Database,
   ExternalLink,
   Eye,
   Lock,
+  PlayCircle,
   Search,
   ShieldAlert,
 } from 'lucide-react';
 import { useState } from 'react';
+import { ReaIngestionTab } from '../components/admin/ReaIngestionTab';
+import { ReviewQueueTab } from '../components/admin/ReviewQueueTab';
 import { PageHeader } from '../components/layout/PageHeader';
 import {
   Badge,
@@ -26,6 +30,7 @@ import {
   Select,
   SkeletonCard,
   Table,
+  Tabs,
 } from '../components/ui';
 import type { BadgeVariant, TableColumn } from '../components/ui';
 import { useSources } from '../hooks/useSources';
@@ -71,6 +76,8 @@ export function AdminSourcesPage() {
   const [verificationStatus, setVerificationStatus] = useState('');
   const [active, setActive] = useState('');
   const [selectedSource, setSelectedSource] = useState<DataSourceItem | null>(null);
+  const [activeTab, setActiveTab] = useState('registry');
+  const [adminKey, setAdminKey] = useState('');
 
   const sourcesQuery = useSources({
     page,
@@ -195,19 +202,8 @@ export function AdminSourcesPage() {
   const items = sourcesQuery.data?.data ?? [];
   const pagination = sourcesQuery.data?.meta.pagination;
 
-  return (
+  const registryTabContent = (
     <div className="space-y-6">
-      <PageHeader
-        title="Official Data Source Registry"
-        description="Auditable directory of verified official Indian renewable-energy portals and candidate sources awaiting human verification."
-        breadcrumbs={[{ label: 'Admin / REA Source Registry' }]}
-        badge={
-          <Badge variant="forest" icon={<Lock className="w-3 h-3" />}>
-            Read-Only Registry
-          </Badge>
-        }
-      />
-
       <Card className="bg-[#F5F8F5]/70">
         <CardContent className="p-4 flex items-start gap-3">
           <ShieldAlert className="w-5 h-5 text-[#D97706] shrink-0 mt-0.5" aria-hidden="true" />
@@ -216,9 +212,9 @@ export function AdminSourcesPage() {
               Security &amp; Ingestion Guardrail Active
             </p>
             <p className="mt-0.5">
-              Source write/delete endpoints (`POST`, `PATCH`, `DELETE /api/v1/sources`) are
-              protected server-side and disabled until admin authentication is configured.
-              Automated REA scraping is not enabled in Milestone 04.
+              Source write/delete endpoints (`POST`, `PATCH`, `DELETE /api/v1/sources`) and REA
+              ingestion/review actions are protected server-side via `ADMIN_API_KEY`. Manual-only
+              and `needs_review` sources are blocked from automated live ingestion.
             </p>
           </div>
         </CardContent>
@@ -421,6 +417,51 @@ export function AdminSourcesPage() {
           </div>
         )}
       </Modal>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="Official Data Source Registry"
+        description="Manage the Official Data Source Registry, run safe REA ingestion pipelines, and review staged records before publication."
+        breadcrumbs={[{ label: 'Admin / REA Console' }]}
+        badge={
+          <Badge variant="forest" icon={<Lock className="w-3 h-3" />}>
+            Guarded Operations
+          </Badge>
+        }
+      />
+
+      <Tabs
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        ariaLabel="Admin REA sections"
+        items={[
+          {
+            id: 'registry',
+            label: 'Source Registry',
+            icon: <Database className="w-4 h-4" />,
+            content: registryTabContent,
+          },
+          {
+            id: 'ingestion',
+            label: 'REA Ingestion',
+            icon: <PlayCircle className="w-4 h-4" />,
+            content: (
+              <ReaIngestionTab adminKey={adminKey} onAdminKeyChange={setAdminKey} />
+            ),
+          },
+          {
+            id: 'review',
+            label: 'Review Queue',
+            icon: <ClipboardCheck className="w-4 h-4" />,
+            content: (
+              <ReviewQueueTab adminKey={adminKey} onAdminKeyChange={setAdminKey} />
+            ),
+          },
+        ]}
+      />
     </div>
   );
 }

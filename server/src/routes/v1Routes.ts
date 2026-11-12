@@ -16,6 +16,14 @@ import {
   postRpoRecord,
   postSource,
 } from '../controllers/domainController.js';
+import {
+  getAuditLogs,
+  getReviewQueue,
+  getReviewQueueItem,
+  postPublishStagedRecord,
+  postReaIngest,
+  postReviewDecision,
+} from '../controllers/reaController.js';
 import { requireAdminAuth } from '../middleware/adminAuth.js';
 import { requireDatabase } from '../middleware/requireDatabase.js';
 import { validateRequest } from '../middleware/validate.js';
@@ -33,13 +41,19 @@ import {
   listSourcesQuerySchema,
   updateSourceSchema,
 } from '../schemas/domainSchemas.js';
+import {
+  listAuditLogsQuerySchema,
+  listReviewQueueQuerySchema,
+  reviewDecisionSchema,
+  runReaIngestSchema,
+} from '../schemas/reaSchemas.js';
 
 const router = Router();
 
 // All /api/v1 domain data routes require an active MongoDB connection.
 // Mounted on specific resource prefixes so unknown /api/v1/* paths still return 404.
 router.use(
-  ['/sources', '/metrics', '/policies', '/schemes', '/rpo', '/ingestion-runs'],
+  ['/sources', '/metrics', '/policies', '/schemes', '/rpo', '/ingestion-runs', '/rea'],
   requireDatabase
 );
 
@@ -96,6 +110,43 @@ router.post(
   '/ingestion-runs',
   validateRequest({ body: createIngestionRunSchema }),
   postIngestionRun
+);
+
+router.post(
+  '/rea/ingest',
+  requireAdminAuth,
+  validateRequest({ body: runReaIngestSchema }),
+  postReaIngest
+);
+router.get(
+  '/rea/review-queue',
+  requireAdminAuth,
+  validateRequest({ query: listReviewQueueQuerySchema }),
+  getReviewQueue
+);
+router.get(
+  '/rea/review-queue/:id',
+  requireAdminAuth,
+  validateRequest({ params: idParamSchema }),
+  getReviewQueueItem
+);
+router.post(
+  '/rea/review-queue/:id/decision',
+  requireAdminAuth,
+  validateRequest({ params: idParamSchema, body: reviewDecisionSchema }),
+  postReviewDecision
+);
+router.post(
+  '/rea/review-queue/:id/publish',
+  requireAdminAuth,
+  validateRequest({ params: idParamSchema }),
+  postPublishStagedRecord
+);
+router.get(
+  '/rea/audit-logs',
+  requireAdminAuth,
+  validateRequest({ query: listAuditLogsQuerySchema }),
+  getAuditLogs
 );
 
 export default router;

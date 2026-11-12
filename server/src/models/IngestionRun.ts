@@ -1,5 +1,14 @@
 import mongoose, { Schema, type InferSchemaType } from 'mongoose';
-import { INGESTION_STATUSES } from '../types/domain.js';
+import { INGESTION_MODES, INGESTION_STATUSES } from '../types/domain.js';
+
+const validationErrorItemSchema = new Schema(
+  {
+    rowIndex: { type: Number, required: true, min: 0 },
+    field: { type: String, trim: true, default: '' },
+    message: { type: String, required: true, trim: true, maxlength: 400 },
+  },
+  { _id: false }
+);
 
 const ingestionRunSchema = new Schema(
   {
@@ -44,6 +53,38 @@ const ingestionRunSchema = new Schema(
       type: String,
       trim: true,
       default: null,
+    },
+    isDryRun: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    sourceMode: {
+      type: String,
+      required: true,
+      enum: INGESTION_MODES,
+      default: 'fixture',
+    },
+    fixtureLabel: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+    recordsDuplicate: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
+    },
+    recordsChanged: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
+    },
+    validationErrors: {
+      type: [validationErrorItemSchema],
+      default: [],
     },
     isDemoData: {
       type: Boolean,

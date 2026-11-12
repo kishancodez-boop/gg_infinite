@@ -1,5 +1,9 @@
 import mongoose, { Schema, type InferSchemaType } from 'mongoose';
-import { AUDIT_RECORD_TYPES, VERIFICATION_STATUSES } from '../types/domain.js';
+import {
+  AUDIT_ACTIONS,
+  AUDIT_RECORD_TYPES,
+  VERIFICATION_STATUSES,
+} from '../types/domain.js';
 
 const auditProvenanceSchema = new Schema(
   {
@@ -44,6 +48,17 @@ const auditProvenanceSchema = new Schema(
       trim: true,
       maxlength: 2000,
       default: '',
+    },
+    action: {
+      type: String,
+      enum: AUDIT_ACTIONS,
+      default: 'staged',
+    },
+    actor: {
+      type: String,
+      trim: true,
+      maxlength: 120,
+      default: 'rea-engine',
     },
     isDemoData: {
       type: Boolean,
