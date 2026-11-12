@@ -116,7 +116,12 @@ router.delete(
 
 router.get('/metrics', validateRequest({ query: listMetricsQuerySchema }), getMetrics);
 router.get('/metrics/:id', validateRequest({ params: idParamSchema }), getMetric);
-router.post('/metrics', validateRequest({ body: createMetricSchema }), postMetric);
+router.post(
+  '/metrics',
+  requireAdminAuth,
+  validateRequest({ body: createMetricSchema }),
+  postMetric
+);
 
 const policyHandlers = makePolicyHandlers('policy');
 router.get('/policies', validateRequest({ query: listPoliciesQuerySchema }), policyHandlers.list);
@@ -160,6 +165,7 @@ router.get(
 );
 router.post(
   '/ingestion-runs',
+  requireAdminAuth,
   validateRequest({ body: createIngestionRunSchema }),
   postIngestionRun
 );

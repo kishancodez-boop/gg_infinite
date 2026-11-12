@@ -62,6 +62,20 @@ export async function publishApprovedStagedRecord(stagedRecordId: string, actor 
     );
   }
 
+  if (
+    staged.provenance?.verificationStatus === 'rejected' ||
+    !staged.proposedData ||
+    typeof staged.proposedData.value !== 'number' ||
+    !Number.isFinite(staged.proposedData.value) ||
+    staged.proposedData.value < 0
+  ) {
+    throw new AppError(
+      'Cannot publish staged record with rejected provenance or invalid metric values.',
+      409,
+      'VALIDATION_ERRORS_PRESENT'
+    );
+  }
+
   const source = await DataSourceModel.findById(staged.sourceRef).lean();
   const confidenceScore =
     staged.provenance.confidence === 'high'

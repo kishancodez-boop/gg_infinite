@@ -84,5 +84,13 @@
   - Replaced `/finance` and `/jobs` placeholders with `FinancePage.tsx` and `JobsPage.tsx` featuring search, multi-facet filters, KPI cards, `Verified` vs `DEMO` badges, official source links, detail modals, non-advisory / vacancy-integrity notices, and loading/empty/error/`503` states.
   - Documented in `docs/green-finance-and-jobs.md`, `docs/api-and-models.md`, and `README.md`.
 
+## Milestone 14 — Security & Data Integrity Audit
+- **Status:** Completed
+- **Scope & Verified Results:**
+  - Audited all routes, middleware, schemas, SSRF protections, REA publishing guards, and calculation/aggregation logic across M01–M10.
+  - Added `requireAdminAuth` to `POST /api/v1/metrics` and `POST /api/v1/ingestion-runs`, added defensive security headers and wildcard CORS filtering in `app.ts`, implemented in-memory API rate limiting (`rateLimit.ts`), and blocked publishing `invalid` staged records in `reviewService.ts`.
+  - Added regression suite `server/src/__tests__/securityAndIntegrityAudit.test.ts` and documented findings, fixes, and remaining risks in `docs/security-and-data-integrity-audit.md`.
+
+
 
 
