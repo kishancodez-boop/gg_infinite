@@ -111,4 +111,14 @@ All list endpoints validate query parameters via **Zod** and return a consistent
   - `POST /api/v1/policies`, `POST /api/v1/schemes` (protected by fail-closed `requireAdminAuth`).
 - See `docs/policies-and-schemes.md` for full filter documentation and provenance rules.
 
+---
+
+## 8. Milestone 07 — Solar ROI Calculator & Financial Simulator
+
+- **Model Added:** `SolarCalculation` (`server/src/models/SolarCalculation.ts`) storing `inputs`, `assumptions`, `resultsSummary`, and `isDemoData`.
+- **Endpoints:**
+  - `POST /api/v1/calculator/simulate` — Stateless Zod-validated calculation + 3 comparison scenarios (works without MongoDB).
+  - `GET /api/v1/calculator/history` & `POST /api/v1/calculator/history` — Protected by both `requireDatabase` (`503`) and fail-closed `requireAdminAuth` (`403`/`401`).
+- See `docs/solar-roi-calculator.md` for formulas, edge-case rules, and disclaimers.
+
 

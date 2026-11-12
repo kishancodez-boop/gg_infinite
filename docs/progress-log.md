@@ -54,4 +54,12 @@
   - Built the full `/policies` Explorer (`client/src/pages/PoliciesPage.tsx`, `policyService.ts`, `usePolicies.ts`) with `All` / `Policies` / `Schemes` tabs, debounced search + clear button, multi-facet filters, `DEMO` labeling, detail drawer with `"Not available"` fallbacks, and loading/empty/error/`503` states.
   - Documented in `docs/policies-and-schemes.md`, `docs/api-and-models.md`, and `README.md`.
 
+## Milestone 07 — Solar ROI Calculator & Financial Simulator
+- **Status:** Completed
+- **Scope & Verified Results:**
+  - Built transparent Solar ROI calculation engine (`solarRoiEngine.ts` on server and client) supporting capacity recommendation, year-by-year degradation, tariff escalation, maintenance, explicit user-entered subsidies (`₹0` default), edge-case warnings, and 3 mathematical sensitivity scenarios (`Conservative`, `Base Case`, `Optimistic`).
+  - Added `SolarCalculation` Mongoose model, Zod schemas, stateless `POST /api/v1/calculator/simulate`, and auth/DB-guarded `/api/v1/calculator/history` endpoints.
+  - Replaced `/calculator` placeholder with interactive `CalculatorPage.tsx` and responsive SVG charts (`SolarCharts.tsx`), year-by-year cash-flow table, and accuracy disclaimers.
+  - Documented formulas and limitations in `docs/solar-roi-calculator.md`, `docs/api-and-models.md`, and `README.md`.
+
 

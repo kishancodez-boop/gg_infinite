@@ -1,5 +1,10 @@
 import { Router } from 'express';
 import {
+  getSolarCalculationHistory,
+  postSaveSolarCalculation,
+  postSimulateSolarRoi,
+} from '../controllers/calculatorController.js';
+import {
   deleteSource,
   getIngestionRun,
   getIngestionRuns,
@@ -47,6 +52,10 @@ import {
   reviewDecisionSchema,
   runReaIngestSchema,
 } from '../schemas/reaSchemas.js';
+import {
+  listCalculatorHistoryQuerySchema,
+  solarRoiSimulateSchema,
+} from '../schemas/calculatorSchemas.js';
 
 const router = Router();
 
@@ -157,6 +166,29 @@ router.get(
   requireAdminAuth,
   validateRequest({ query: listAuditLogsQuerySchema }),
   getAuditLogs
+);
+
+// Stateless Solar ROI simulation works even when MongoDB is unavailable.
+router.post(
+  '/calculator/simulate',
+  validateRequest({ body: solarRoiSimulateSchema }),
+  postSimulateSolarRoi
+);
+
+// Saved calculation history requires both active MongoDB and admin authorization.
+router.get(
+  '/calculator/history',
+  requireDatabase,
+  requireAdminAuth,
+  validateRequest({ query: listCalculatorHistoryQuerySchema }),
+  getSolarCalculationHistory
+);
+router.post(
+  '/calculator/history',
+  requireDatabase,
+  requireAdminAuth,
+  validateRequest({ body: solarRoiSimulateSchema }),
+  postSaveSolarCalculation
 );
 
 export default router;

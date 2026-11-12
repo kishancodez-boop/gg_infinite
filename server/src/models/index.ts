@@ -10,6 +10,8 @@ export { PolicySchemeModel } from './PolicyScheme.js';
 export type { PolicySchemeDocument } from './PolicyScheme.js';
 export { RpoRecordModel } from './RpoRecord.js';
 export type { RpoRecordDocument } from './RpoRecord.js';
+export { SolarCalculationModel } from './SolarCalculation.js';
+export type { SolarCalculationDocument } from './SolarCalculation.js';
 export { StagedRecordModel } from './StagedRecord.js';
 export type { StagedRecordDocument } from './StagedRecord.js';
 

@@ -5,6 +5,7 @@ import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import { EmptyState, ToastProvider } from './components/ui';
 import { MainLayout } from './layouts/MainLayout';
 import { AdminSourcesPage } from './pages/AdminSourcesPage';
+import { CalculatorPage } from './pages/CalculatorPage';
 import { HomePage } from './pages/HomePage';
 import { ModulePlaceholderPage } from './pages/ModulePlaceholderPage';
 import { PoliciesPage } from './pages/PoliciesPage';
@@ -16,21 +17,7 @@ export function AppRoutes() {
     <Routes>
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route
-          path="/calculator"
-          element={
-            <ModulePlaceholderPage
-              title="Solar ROI Calculator"
-              breadcrumbLabel="Solar ROI Calculator"
-              description="Transparent rooftop solar system sizing, installation cost breakdown, subsidy assumptions, monthly savings, and simple payback estimation."
-              plannedFeatures={[
-                'User-editable assumptions (tariff, roof capacity, shading, degradation) with Zod validation.',
-                'Clear separation between user inputs, platform estimates, and official subsidy rules.',
-                'Honest uncertainty ranges — never guaranteeing fixed savings or subsidy approval.',
-              ]}
-            />
-          }
-        />
+        <Route path="/calculator" element={<CalculatorPage />} />
         <Route path="/policies" element={<PoliciesPage />} />
         <Route
           path="/rpo"
