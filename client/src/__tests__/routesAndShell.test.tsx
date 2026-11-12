@@ -6,6 +6,68 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AppRoutes } from '../App';
 import { ErrorState, Input, Select, ToastProvider } from '../components/ui';
 
+vi.mock('../services/sourceService', () => ({
+  fetchSources: vi.fn().mockResolvedValue({
+    success: true,
+    data: [
+      {
+        _id: '507f1f77bcf86cd799439011',
+        sourceName: 'Ministry of New and Renewable Energy (MNRE)',
+        organization: 'Ministry of New and Renewable Energy',
+        sourceUrl: 'https://mnre.gov.in',
+        domain: 'mnre.gov.in',
+        sourceType: 'central_ministry',
+        dataCategory: 'policies_schemes',
+        description: 'Official MNRE portal.',
+        accessMethod: 'manual',
+        expectedFormat: 'mixed',
+        updateCadence: 'monthly',
+        accessNotes: 'Manual reference.',
+        verificationStatus: 'verified',
+        evidenceNotes: 'Official gov.in domain confirmed.',
+        lastCheckedAt: '2026-11-12T00:00:00.000Z',
+        active: true,
+        isDemoData: false,
+        createdAt: '2026-11-12T00:00:00.000Z',
+        updatedAt: '2026-11-12T00:00:00.000Z',
+      },
+      {
+        _id: '507f1f77bcf86cd799439012',
+        sourceName: 'Gujarat Energy Development Agency (GEDA)',
+        organization: 'Government of Gujarat',
+        sourceUrl: 'https://geda.gujarat.gov.in',
+        domain: 'geda.gujarat.gov.in',
+        sourceType: 'state_nodal_agency',
+        dataCategory: 'state_statistics',
+        description: 'State nodal agency.',
+        accessMethod: 'manual',
+        expectedFormat: 'html',
+        updateCadence: 'unknown',
+        accessNotes: 'Requires robots.txt check.',
+        verificationStatus: 'needs_review',
+        evidenceNotes: 'Pending human review.',
+        lastCheckedAt: '2026-11-12T00:00:00.000Z',
+        active: true,
+        isDemoData: false,
+        createdAt: '2026-11-12T00:00:00.000Z',
+        updatedAt: '2026-11-12T00:00:00.000Z',
+      },
+    ],
+    meta: {
+      pagination: {
+        page: 1,
+        limit: 10,
+        total: 2,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
+      dataMode: 'verified',
+      containsDemoData: false,
+    },
+  }),
+}));
+
 vi.mock('../services/systemService', () => ({
   fetchApiHealth: vi.fn().mockResolvedValue({
     service: 'GreenGrid India API',
@@ -73,7 +135,7 @@ describe('Milestone 02 Application Shell & Routes', () => {
     { path: '/rpo', heading: 'RPO Compliance Tracker', navLabel: 'RPO Tracker' },
     { path: '/finance', heading: 'Green Finance Directory', navLabel: 'Green Finance' },
     { path: '/jobs', heading: 'Green Jobs Portal', navLabel: 'Green Jobs' },
-    { path: '/admin', heading: 'Admin / REA Console', navLabel: 'Admin / REA' },
+    { path: '/admin', heading: 'Official Data Source Registry', navLabel: 'Admin / REA' },
   ];
 
   it.each(routes)('renders route $path inside shell with active nav link', async ({ path, heading, navLabel }) => {
@@ -147,5 +209,19 @@ describe('Milestone 02 Application Shell & Routes', () => {
   it('renders Route Not Found state for unknown paths', async () => {
     renderAtRoute('/unknown-route');
     expect(await screen.findByText('Route Not Found')).toBeTruthy();
+  });
+
+  it('displays verified and candidate sources and opens detail drawer on /admin', async () => {
+    renderAtRoute('/admin');
+
+    expect(
+      await screen.findByText('Ministry of New and Renewable Energy (MNRE)')
+    ).toBeTruthy();
+    expect(screen.getByText('Gujarat Energy Development Agency (GEDA)')).toBeTruthy();
+
+    const detailButtons = screen.getAllByRole('button', { name: 'Details' });
+    fireEvent.click(detailButtons[0]!);
+    expect(await screen.findByRole('dialog')).toBeTruthy();
+    expect(await screen.findByText('Official gov.in domain confirmed.')).toBeTruthy();
   });
 });

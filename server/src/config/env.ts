@@ -16,6 +16,11 @@ const envSchema = z.object({
       (val) => val === undefined || /^mongodb(\+srv)?:\/\//.test(val),
       'MONGODB_URI must start with mongodb:// or mongodb+srv://'
     ),
+  ADMIN_API_KEY: z
+    .string()
+    .trim()
+    .optional()
+    .transform((val) => (val && val.length > 0 ? val : undefined)),
 });
 
 export type AppEnv = z.infer<typeof envSchema>;

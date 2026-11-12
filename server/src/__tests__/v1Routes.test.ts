@@ -3,6 +3,8 @@ import request from 'supertest';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from '../app.js';
 import * as dbConfig from '../config/db.js';
+import { env } from '../config/env.js';
+import { OFFICIAL_SOURCE_CATALOGUE } from '../data/sourceCatalogue.js';
 import {
   DataSourceModel,
   EnergyMetricModel,
@@ -10,6 +12,7 @@ import {
   PolicySchemeModel,
   RpoRecordModel,
 } from '../models/index.js';
+import { createSourceSchema } from '../schemas/domainSchemas.js';
 
 const app = createApp();
 const validObjectId = new mongoose.Types.ObjectId().toString();
@@ -24,6 +27,7 @@ function mockFindChain<T>(items: T[]) {
 }
 
 afterEach(() => {
+  env.ADMIN_API_KEY = undefined;
   vi.restoreAllMocks();
 });
 
@@ -165,8 +169,40 @@ describe('/api/v1 Domain Routes (Validation, Pagination, Filtering & Demo Separa
     });
   });
 
-  it('returns 400 VALIDATION_ERROR for invalid ObjectId params, query params, and request bodies', async () => {
+  it('blocks unauthorized write/update/delete operations on /api/v1/sources', async () => {
     vi.spyOn(dbConfig, 'isDatabaseConnected').mockReturnValue(true);
+
+    const postNoAuth = await request(app).post('/api/v1/sources').send({
+      sourceName: 'Test',
+      organization: 'Org',
+      sourceUrl: 'https://example.org/test',
+      sourceType: 'other',
+      accessMethod: 'manual',
+    });
+    expect(postNoAuth.status).toBe(403);
+    expect(postNoAuth.body.error.code).toBe('ADMIN_AUTH_NOT_CONFIGURED');
+
+    const patchNoAuth = await request(app)
+      .patch(`/api/v1/sources/${validObjectId}`)
+      .send({ active: false });
+    expect(patchNoAuth.status).toBe(403);
+
+    const deleteNoAuth = await request(app).delete(`/api/v1/sources/${validObjectId}`);
+    expect(deleteNoAuth.status).toBe(403);
+
+    env.ADMIN_API_KEY = 'secret-admin-key';
+    const missingHeader = await request(app).delete(`/api/v1/sources/${validObjectId}`);
+    expect(missingHeader.status).toBe(401);
+
+    const wrongHeader = await request(app)
+      .delete(`/api/v1/sources/${validObjectId}`)
+      .set('x-admin-key', 'wrong-key');
+    expect(wrongHeader.status).toBe(403);
+  });
+
+  it('returns 400 VALIDATION_ERROR for invalid ObjectId params, query params, and authorized body', async () => {
+    vi.spyOn(dbConfig, 'isDatabaseConnected').mockReturnValue(true);
+    env.ADMIN_API_KEY = 'secret-admin-key';
 
     const badId = await request(app).get('/api/v1/sources/not-an-object-id');
     expect(badId.status).toBe(400);
@@ -176,16 +212,39 @@ describe('/api/v1 Domain Routes (Validation, Pagination, Filtering & Demo Separa
     expect(badQuery.status).toBe(400);
     expect(badQuery.body.error.code).toBe('VALIDATION_ERROR');
 
-    const badBody = await request(app).post('/api/v1/sources').send({
-      sourceName: 'A',
-      sourceUrl: 'invalid-url',
-    });
+    const badBody = await request(app)
+      .post('/api/v1/sources')
+      .set('x-admin-key', 'secret-admin-key')
+      .send({
+        sourceName: 'A',
+        sourceUrl: 'invalid-url',
+      });
     expect(badBody.status).toBe(400);
     expect(badBody.body.error.code).toBe('VALIDATION_ERROR');
   });
 
-  it('returns 404 RESOURCE_NOT_FOUND when a record does not exist and 409 on duplicate key', async () => {
+  it('supports dataCategory and verificationStatus filtering on GET /api/v1/sources', async () => {
     vi.spyOn(dbConfig, 'isDatabaseConnected').mockReturnValue(true);
+    const findSpy = vi
+      .spyOn(DataSourceModel, 'find')
+      .mockReturnValue(mockFindChain([]) as never);
+    vi.spyOn(DataSourceModel, 'countDocuments').mockResolvedValue(0);
+
+    const res = await request(app).get(
+      '/api/v1/sources?dataCategory=policies_schemes&verificationStatus=verified&active=true'
+    );
+    expect(res.status).toBe(200);
+    expect(findSpy).toHaveBeenCalledWith({
+      isDemoData: false,
+      dataCategory: 'policies_schemes',
+      verificationStatus: 'verified',
+      active: true,
+    });
+  });
+
+  it('returns 404 RESOURCE_NOT_FOUND when a record does not exist and 409 on duplicate key when authorized', async () => {
+    vi.spyOn(dbConfig, 'isDatabaseConnected').mockReturnValue(true);
+    env.ADMIN_API_KEY = 'secret-admin-key';
 
     vi.spyOn(DataSourceModel, 'findById').mockReturnValue({
       lean: vi.fn().mockResolvedValue(null),
@@ -196,15 +255,48 @@ describe('/api/v1 Domain Routes (Validation, Pagination, Filtering & Demo Separa
     expect(notFound.body.error.code).toBe('RESOURCE_NOT_FOUND');
 
     vi.spyOn(DataSourceModel, 'create').mockRejectedValue({ code: 11000 });
-    const duplicate = await request(app).post('/api/v1/sources').send({
-      sourceName: 'Valid Source',
-      organization: 'Valid Org',
-      sourceUrl: 'https://example.org/valid',
-      sourceType: 'public_open_data',
-      accessMethod: 'csv',
-    });
+    const duplicate = await request(app)
+      .post('/api/v1/sources')
+      .set('x-admin-key', 'secret-admin-key')
+      .send({
+        sourceName: 'Valid Source',
+        organization: 'Valid Org',
+        sourceUrl: 'https://example.org/valid',
+        sourceType: 'public_open_data',
+        accessMethod: 'csv',
+      });
     expect(duplicate.status).toBe(409);
     expect(duplicate.body.error.code).toBe('DUPLICATE_RESOURCE');
+
+    vi.spyOn(DataSourceModel, 'findByIdAndUpdate').mockReturnValue({
+      lean: vi.fn().mockResolvedValue({ _id: validObjectId, active: false }),
+    } as never);
+    const patched = await request(app)
+      .patch(`/api/v1/sources/${validObjectId}`)
+      .set('x-admin-key', 'secret-admin-key')
+      .send({ active: false });
+    expect(patched.status).toBe(200);
+    expect(patched.body.data.active).toBe(false);
+  });
+
+  it('validates OFFICIAL_SOURCE_CATALOGUE uniqueness and verified vs candidate separation', () => {
+    const urls = OFFICIAL_SOURCE_CATALOGUE.map((s) => s.sourceUrl);
+    expect(new Set(urls).size).toBe(urls.length);
+
+    for (const entry of OFFICIAL_SOURCE_CATALOGUE) {
+      const parsed = createSourceSchema.parse(entry);
+      expect(parsed.isDemoData).toBe(false);
+      expect(parsed.lastCheckedAt).toBeInstanceOf(Date);
+      const doc = new DataSourceModel(parsed);
+      expect(doc.validateSync()).toBeUndefined();
+    }
+
+    const verified = OFFICIAL_SOURCE_CATALOGUE.filter((s) => s.verificationStatus === 'verified');
+    const candidates = OFFICIAL_SOURCE_CATALOGUE.filter(
+      (s) => s.verificationStatus === 'needs_review'
+    );
+    expect(verified.length).toBeGreaterThan(0);
+    expect(candidates.length).toBeGreaterThan(0);
   });
 });
 

@@ -11,6 +11,7 @@ import {
   listPoliciesQuerySchema,
   listRpoQuerySchema,
   listSourcesQuerySchema,
+  updateSourceSchema,
 } from '../schemas/domainSchemas.js';
 import * as domainService from '../services/domainService.js';
 import type { PolicyRecordKind } from '../types/domain.js';
@@ -38,6 +39,17 @@ export const postSource = asyncHandler(async (req, res) => {
   const payload = req.body as z.infer<typeof createSourceSchema>;
   const created = await domainService.createSource(payload);
   res.status(201).json({ success: true, data: created });
+});
+
+export const patchSource = asyncHandler(async (req, res) => {
+  const payload = req.body as z.infer<typeof updateSourceSchema>;
+  const updated = await domainService.updateSourceById(String(req.params.id), payload);
+  res.status(200).json({ success: true, data: updated });
+});
+
+export const deleteSource = asyncHandler(async (req, res) => {
+  const deleted = await domainService.deleteSourceById(String(req.params.id));
+  res.status(200).json({ success: true, data: deleted });
 });
 
 export const getMetrics = asyncHandler(async (req, res) => {

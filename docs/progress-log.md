@@ -29,3 +29,11 @@
   - Created explicit `npm --prefix server run seed:demo` script (`server/src/scripts/seedDemo.ts`) with `[DEMO]`-labeled fixtures and production/missing-URI safeguards.
   - Documented API contracts, MongoDB setup, models, and provenance rules in `docs/api-and-models.md`.
 
+## Milestone 04 — Official Data Source Registry
+- **Status:** Completed
+- **Scope & Verified Results:**
+  - Extended `DataSource` Mongoose model & Zod schemas with `domain`, `dataCategory`, `description`, `expectedFormat`, `updateCadence`, `accessNotes`, and `evidenceNotes`.
+  - Researched and catalogued 12 official Indian renewable-energy sources (`server/src/data/sourceCatalogue.ts` & `docs/data-sources.md`): 8 verified central reference portals and 4 candidate sources marked `needs_review`.
+  - Added `PATCH /api/v1/sources/:id` and `DELETE /api/v1/sources/:id`, protected all source write routes with fail-closed `requireAdminAuth` (`server/src/middleware/adminAuth.ts`), and added `npm --prefix server run seed:sources`.
+  - Built the read-only Source Registry UI on `/admin` (`client/src/pages/AdminSourcesPage.tsx`) with search, category/verification/active filters, pagination, detail drawer, and honest `503` DB-unavailable state.
+

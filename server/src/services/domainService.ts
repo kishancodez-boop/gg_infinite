@@ -26,6 +26,7 @@ import type {
   listPoliciesQuerySchema,
   listRpoQuerySchema,
   listSourcesQuerySchema,
+  updateSourceSchema,
 } from '../schemas/domainSchemas.js';
 import type { PolicyRecordKind } from '../types/domain.js';
 import { buildDataModeFilter, executePaginatedQuery } from '../utils/pagination.js';
@@ -40,11 +41,12 @@ export async function listSources(query: z.infer<typeof listSourcesQuerySchema>)
   };
   if (query.verificationStatus) filter.verificationStatus = query.verificationStatus;
   if (query.sourceType) filter.sourceType = query.sourceType;
+  if (query.dataCategory) filter.dataCategory = query.dataCategory;
   if (query.accessMethod) filter.accessMethod = query.accessMethod;
   if (query.active !== undefined) filter.active = query.active === 'true';
   if (query.search) {
     const regex = new RegExp(escapeRegex(query.search), 'i');
-    filter.$or = [{ sourceName: regex }, { organization: regex }];
+    filter.$or = [{ sourceName: regex }, { organization: regex }, { domain: regex }];
   }
 
   return executePaginatedQuery<DataSourceDocument>({
@@ -67,6 +69,25 @@ export async function getSourceById(id: string) {
 export async function createSource(payload: z.infer<typeof createSourceSchema>) {
   const created = await DataSourceModel.create(payload);
   return created.toObject();
+}
+
+export async function updateSourceById(
+  id: string,
+  payload: z.infer<typeof updateSourceSchema>
+) {
+  const updated = await DataSourceModel.findByIdAndUpdate(
+    id,
+    { $set: payload },
+    { new: true, runValidators: true }
+  ).lean();
+  if (!updated) throw new AppError('Data source not found', 404, 'RESOURCE_NOT_FOUND');
+  return updated;
+}
+
+export async function deleteSourceById(id: string) {
+  const deleted = await DataSourceModel.findByIdAndDelete(id).lean();
+  if (!deleted) throw new AppError('Data source not found', 404, 'RESOURCE_NOT_FOUND');
+  return deleted;
 }
 
 export async function listMetrics(query: z.infer<typeof listMetricsQuerySchema>) {

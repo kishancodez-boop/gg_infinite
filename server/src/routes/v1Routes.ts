@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  deleteSource,
   getIngestionRun,
   getIngestionRuns,
   getMetric,
@@ -9,11 +10,13 @@ import {
   getSource,
   getSources,
   makePolicyHandlers,
+  patchSource,
   postIngestionRun,
   postMetric,
   postRpoRecord,
   postSource,
 } from '../controllers/domainController.js';
+import { requireAdminAuth } from '../middleware/adminAuth.js';
 import { requireDatabase } from '../middleware/requireDatabase.js';
 import { validateRequest } from '../middleware/validate.js';
 import { idParamSchema } from '../schemas/commonSchemas.js';
@@ -28,6 +31,7 @@ import {
   listPoliciesQuerySchema,
   listRpoQuerySchema,
   listSourcesQuerySchema,
+  updateSourceSchema,
 } from '../schemas/domainSchemas.js';
 
 const router = Router();
@@ -41,7 +45,24 @@ router.use(
 
 router.get('/sources', validateRequest({ query: listSourcesQuerySchema }), getSources);
 router.get('/sources/:id', validateRequest({ params: idParamSchema }), getSource);
-router.post('/sources', validateRequest({ body: createSourceSchema }), postSource);
+router.post(
+  '/sources',
+  requireAdminAuth,
+  validateRequest({ body: createSourceSchema }),
+  postSource
+);
+router.patch(
+  '/sources/:id',
+  requireAdminAuth,
+  validateRequest({ params: idParamSchema, body: updateSourceSchema }),
+  patchSource
+);
+router.delete(
+  '/sources/:id',
+  requireAdminAuth,
+  validateRequest({ params: idParamSchema }),
+  deleteSource
+);
 
 router.get('/metrics', validateRequest({ query: listMetricsQuerySchema }), getMetrics);
 router.get('/metrics/:id', validateRequest({ params: idParamSchema }), getMetric);

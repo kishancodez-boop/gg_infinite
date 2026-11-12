@@ -6,7 +6,8 @@
 | :--- | :--- | :--- | :--- |
 | `/api/health` | `GET` | No | Returns `200 OK` with `status: "degraded"` and `database.status: "unconfigured"` (or `"disconnected"`). |
 | `/api/v1/system/status` | `GET` | No | Returns `200 OK` with `apiStatus: "operational"` and accurate database readiness details. |
-| `/api/v1/sources` & `/api/v1/sources/:id` | `GET`, `POST` | Yes | Returns `503 DATABASE_UNAVAILABLE` immediately (`requireDatabase` guard). |
+| `/api/v1/sources` | `GET` | Yes | Returns `503 DATABASE_UNAVAILABLE` immediately (`requireDatabase` guard). |
+| `/api/v1/sources` & `/api/v1/sources/:id` | `POST`, `PATCH`, `DELETE` | Yes + Admin Auth | Protected by `requireAdminAuth` (`403 ADMIN_AUTH_NOT_CONFIGURED` unless `ADMIN_API_KEY` is configured and matched via `x-admin-key`). |
 | `/api/v1/metrics` & `/api/v1/metrics/:id` | `GET`, `POST` | Yes | Returns `503 DATABASE_UNAVAILABLE` immediately. |
 | `/api/v1/policies` & `/api/v1/policies/:id` | `GET`, `POST` | Yes | Returns `503 DATABASE_UNAVAILABLE` immediately. |
 | `/api/v1/schemes` & `/api/v1/schemes/:id` | `GET`, `POST` | Yes | Returns `503 DATABASE_UNAVAILABLE` immediately. |
@@ -48,7 +49,7 @@ All list endpoints validate query parameters via **Zod** and return a consistent
 - `search`: case-insensitive keyword filter
 
 ### Resource-Specific Filters
-- `/api/v1/sources`: `sourceType`, `accessMethod`, `active` (`true`|`false`)
+- `/api/v1/sources`: `sourceType`, `dataCategory`, `accessMethod`, `active` (`true`|`false`), `verificationStatus`, `search` (matches `sourceName`, `organization`, `domain`)
 - `/api/v1/metrics`: `geographicScope` (`national`|`state`|`region`), `stateOrRegion`, `metricName`
 - `/api/v1/policies` & `/api/v1/schemes`: `category`, `jurisdiction` (`central`|`state`)
 - `/api/v1/rpo`: `stateOrOrganization`, `compliancePeriod`, `category`

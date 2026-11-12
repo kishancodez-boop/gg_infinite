@@ -17,6 +17,29 @@ export const SOURCE_TYPES = [
 ] as const;
 export type SourceType = (typeof SOURCE_TYPES)[number];
 
+export const DATA_CATEGORIES = [
+  'capacity_generation',
+  'solar_wind',
+  'policies_schemes',
+  'rpo_regulations',
+  'state_statistics',
+  'green_finance',
+  'tenders_opportunities',
+  'general',
+] as const;
+export type DataCategory = (typeof DATA_CATEGORIES)[number];
+
+export const EXPECTED_FORMATS = [
+  'json',
+  'csv',
+  'xlsx',
+  'pdf',
+  'html',
+  'rss',
+  'mixed',
+] as const;
+export type ExpectedFormat = (typeof EXPECTED_FORMATS)[number];
+
 export const ACCESS_METHODS = [
   'api',
   'csv',

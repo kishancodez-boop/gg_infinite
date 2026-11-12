@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import {
   ACCESS_METHODS,
+  DATA_CATEGORIES,
+  EXPECTED_FORMATS,
   GEOGRAPHIC_SCOPES,
   INGESTION_STATUSES,
   POLICY_CATEGORIES,
@@ -16,8 +18,11 @@ import {
 } from './commonSchemas.js';
 
 export const listSourcesQuerySchema = baseListQuerySchema.extend({
-  sortBy: z.enum(['createdAt', 'lastCheckedAt', 'sourceName']).default('createdAt'),
+  sortBy: z
+    .enum(['createdAt', 'lastCheckedAt', 'sourceName', 'organization', 'dataCategory'])
+    .default('createdAt'),
   sourceType: z.enum(SOURCE_TYPES).optional(),
+  dataCategory: z.enum(DATA_CATEGORIES).optional(),
   accessMethod: z.enum(ACCESS_METHODS).optional(),
   active: z.enum(['true', 'false']).optional(),
 });
@@ -26,13 +31,25 @@ export const createSourceSchema = z.object({
   sourceName: z.string().trim().min(2).max(200),
   organization: z.string().trim().min(2).max(200),
   sourceUrl: httpUrlSchema,
+  domain: z.string().trim().toLowerCase().max(200).optional(),
   sourceType: z.enum(SOURCE_TYPES),
+  dataCategory: z.enum(DATA_CATEGORIES).default('general'),
+  description: z.string().trim().max(1000).default(''),
   accessMethod: z.enum(ACCESS_METHODS),
+  expectedFormat: z.enum(EXPECTED_FORMATS).default('mixed'),
+  updateCadence: z.string().trim().max(100).default('unknown'),
+  accessNotes: z.string().trim().max(1000).default(''),
   verificationStatus: z.enum(VERIFICATION_STATUSES).default('unverified'),
+  evidenceNotes: z.string().trim().max(1000).default(''),
   lastCheckedAt: z.coerce.date().optional().nullable(),
   active: z.boolean().default(true),
   isDemoData: z.boolean().default(false),
 });
+
+export const updateSourceSchema = createSourceSchema.partial().refine(
+  (data) => Object.keys(data).length > 0,
+  'At least one field must be provided for update'
+);
 
 export const listMetricsQuerySchema = baseListQuerySchema.extend({
   sortBy: z.enum(['observationDate', 'createdAt', 'value']).default('observationDate'),

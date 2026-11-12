@@ -4,6 +4,7 @@ import { ArrowLeft, Compass } from 'lucide-react';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import { EmptyState, ToastProvider } from './components/ui';
 import { MainLayout } from './layouts/MainLayout';
+import { AdminSourcesPage } from './pages/AdminSourcesPage';
 import { HomePage } from './pages/HomePage';
 import { ModulePlaceholderPage } from './pages/ModulePlaceholderPage';
 
@@ -89,21 +90,7 @@ export function AppRoutes() {
             />
           }
         />
-        <Route
-          path="/admin"
-          element={
-            <ModulePlaceholderPage
-              title="Admin / REA Console"
-              breadcrumbLabel="Admin / REA"
-              description="Controlled Reverse Engineering Agent (REA) ingestion console, source registry, dry-run inspection, and human review queue."
-              plannedFeatures={[
-                'Allowlisted official source registry with terms and robots.txt policy tracking.',
-                'Dry-run ingestion pipeline (Fetch -> Parse -> Normalize -> Validate -> Deduplicate).',
-                'Human review queue for low-confidence or changed records plus audit logs.',
-              ]}
-            />
-          }
-        />
+        <Route path="/admin" element={<AdminSourcesPage />} />
         <Route
           path="*"
           element={
