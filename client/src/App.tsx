@@ -6,8 +6,9 @@ import { EmptyState, ToastProvider } from './components/ui';
 import { MainLayout } from './layouts/MainLayout';
 import { AdminSourcesPage } from './pages/AdminSourcesPage';
 import { CalculatorPage } from './pages/CalculatorPage';
+import { FinancePage } from './pages/FinancePage';
 import { HomePage } from './pages/HomePage';
-import { ModulePlaceholderPage } from './pages/ModulePlaceholderPage';
+import { JobsPage } from './pages/JobsPage';
 import { PoliciesPage } from './pages/PoliciesPage';
 import { RpoPage } from './pages/RpoPage';
 
@@ -21,36 +22,8 @@ export function AppRoutes() {
         <Route path="/calculator" element={<CalculatorPage />} />
         <Route path="/policies" element={<PoliciesPage />} />
         <Route path="/rpo" element={<RpoPage />} />
-        <Route
-          path="/finance"
-          element={
-            <ModulePlaceholderPage
-              title="Green Finance Directory"
-              breadcrumbLabel="Green Finance"
-              description="Curated directory of renewable-energy loans, grants, green bonds, and institutional incentives with verified eligibility and official links."
-              plannedFeatures={[
-                'Filter by borrower profile (citizen, MSME, developer) and financing instrument.',
-                'Verified source attribution and non-advisory disclaimer on every listing.',
-                'Clear marking of third-party terms and expired programs.',
-              ]}
-            />
-          }
-        />
-        <Route
-          path="/jobs"
-          element={
-            <ModulePlaceholderPage
-              title="Green Jobs Portal"
-              breadcrumbLabel="Green Jobs"
-              description="Discover verified renewable-energy careers, skill pathways, employers, and training programs across India."
-              plannedFeatures={[
-                'Filter by role category, location, employment type, and required skills.',
-                'Direct official employer or portal application links with verification timestamps.',
-                'Automatic expiry handling for outdated postings.',
-              ]}
-            />
-          }
-        />
+        <Route path="/finance" element={<FinancePage />} />
+        <Route path="/jobs" element={<JobsPage />} />
         <Route path="/admin" element={<AdminSourcesPage />} />
         <Route
           path="*"

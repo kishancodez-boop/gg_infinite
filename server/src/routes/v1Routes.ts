@@ -6,6 +6,14 @@ import {
 } from '../controllers/calculatorController.js';
 import { getNationalDashboard } from '../controllers/dashboardController.js';
 import {
+  getFinanceProgram,
+  getFinancePrograms,
+  getJobListing,
+  getJobListings,
+  postFinanceProgram,
+  postJobListing,
+} from '../controllers/financeJobsController.js';
+import {
   deleteSource,
   getIngestionRun,
   getIngestionRuns,
@@ -59,13 +67,29 @@ import {
   solarRoiSimulateSchema,
 } from '../schemas/calculatorSchemas.js';
 import { nationalDashboardQuerySchema } from '../schemas/dashboardSchemas.js';
+import {
+  createFinanceSchema,
+  createJobSchema,
+  listFinanceQuerySchema,
+  listJobsQuerySchema,
+} from '../schemas/financeJobsSchemas.js';
 
 const router = Router();
 
 // All /api/v1 domain data routes require an active MongoDB connection.
 // Mounted on specific resource prefixes so unknown /api/v1/* paths still return 404.
 router.use(
-  ['/sources', '/metrics', '/policies', '/schemes', '/rpo', '/ingestion-runs', '/rea'],
+  [
+    '/sources',
+    '/metrics',
+    '/policies',
+    '/schemes',
+    '/rpo',
+    '/finance',
+    '/jobs',
+    '/ingestion-runs',
+    '/rea',
+  ],
   requireDatabase
 );
 
@@ -205,6 +229,24 @@ router.get(
   requireDatabase,
   validateRequest({ query: nationalDashboardQuerySchema }),
   getNationalDashboard
+);
+
+router.get('/finance', validateRequest({ query: listFinanceQuerySchema }), getFinancePrograms);
+router.get('/finance/:id', validateRequest({ params: idParamSchema }), getFinanceProgram);
+router.post(
+  '/finance',
+  requireAdminAuth,
+  validateRequest({ body: createFinanceSchema }),
+  postFinanceProgram
+);
+
+router.get('/jobs', validateRequest({ query: listJobsQuerySchema }), getJobListings);
+router.get('/jobs/:id', validateRequest({ params: idParamSchema }), getJobListing);
+router.post(
+  '/jobs',
+  requireAdminAuth,
+  validateRequest({ body: createJobSchema }),
+  postJobListing
 );
 
 export default router;

@@ -137,3 +137,66 @@ export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 export const DATA_MODES = ['verified', 'demo', 'all'] as const;
 export type DataMode = (typeof DATA_MODES)[number];
 
+export const FINANCE_CATEGORIES = [
+  'concessional_loan',
+  'green_bond',
+  'grant_viability_gap',
+  'refinance_facility',
+  'equity_fund',
+  'risk_guarantee',
+  'other',
+] as const;
+export type FinanceCategory = (typeof FINANCE_CATEGORIES)[number];
+
+export const FINANCE_PROJECT_TYPES = [
+  'utility_solar',
+  'rooftop_solar',
+  'wind',
+  'hybrid_storage',
+  'green_hydrogen',
+  'msme_decentralized',
+  'grid_infrastructure',
+  'all_renewables',
+] as const;
+export type FinanceProjectType = (typeof FINANCE_PROJECT_TYPES)[number];
+
+export const FINANCE_BORROWER_PROFILES = [
+  'developer',
+  'msme',
+  'residential',
+  'utility_discom',
+  'state_agency',
+  'all',
+] as const;
+export type FinanceBorrowerProfile = (typeof FINANCE_BORROWER_PROFILES)[number];
+
+export const JOB_EXPERIENCE_LEVELS = [
+  'entry',
+  'mid',
+  'senior',
+  'lead_principal',
+  'all',
+] as const;
+export type JobExperienceLevel = (typeof JOB_EXPERIENCE_LEVELS)[number];
+
+export const JOB_EMPLOYMENT_TYPES = [
+  'full_time',
+  'contract',
+  'fellowship',
+  'internship',
+  'apprenticeship',
+] as const;
+export type JobEmploymentType = (typeof JOB_EMPLOYMENT_TYPES)[number];
+
+export const JOB_ROLE_CATEGORIES = [
+  'solar_engineering',
+  'wind_engineering',
+  'grid_storage',
+  'policy_regulatory',
+  'green_finance',
+  'operations_maintenance',
+  'other',
+] as const;
+export type JobRoleCategory = (typeof JOB_ROLE_CATEGORIES)[number];
+
+

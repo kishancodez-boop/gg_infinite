@@ -36,6 +36,7 @@ export interface PaginatedQueryOptions<T> {
   sortBy: string;
   sortOrder: 'asc' | 'desc';
   dataMode: DataMode;
+  populate?: { path: string; select?: string };
 }
 
 export async function executePaginatedQuery<T extends { isDemoData?: boolean }>({
@@ -46,17 +47,23 @@ export async function executePaginatedQuery<T extends { isDemoData?: boolean }>(
   sortBy,
   sortOrder,
   dataMode,
+  populate,
 }: PaginatedQueryOptions<T>): Promise<ApiListResponse<T>> {
   const skip = (page - 1) * limit;
   const sortDirection: SortOrder = sortOrder === 'asc' ? 1 : -1;
 
+  const findQuery = model
+    .find(filter)
+    .sort({ [sortBy]: sortDirection })
+    .skip(skip)
+    .limit(limit);
+
+  if (populate) {
+    findQuery.populate(populate.path, populate.select);
+  }
+
   const [items, total] = await Promise.all([
-    model
-      .find(filter)
-      .sort({ [sortBy]: sortDirection })
-      .skip(skip)
-      .limit(limit)
-      .lean<T[]>(),
+    findQuery.lean<T[]>(),
     model.countDocuments(filter),
   ]);
 

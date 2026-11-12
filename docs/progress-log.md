@@ -77,4 +77,12 @@
   - Replaced `/rpo` placeholder with `RpoPage.tsx` and `RpoComparisonChart.tsx` featuring KPI cards, filters, progress bars, source links, `DEMO` notices, and loading/empty/error/`503` states.
   - Documented in `docs/rpo-tracker.md`, `docs/api-and-models.md`, and `README.md`.
 
+## Milestone 10 — Green Finance & Renewable Energy Jobs
+- **Status:** Completed
+- **Scope & Verified Results:**
+  - Added `GreenFinanceProgram` and `GreenJobListing` Mongoose models, Zod schemas (`financeJobsSchemas.ts`), `financeJobsService.ts`, `financeJobsController.ts`, and `/api/v1/finance` + `/api/v1/jobs` routes (with `requireDatabase` `503` handling and fail-closed `requireAdminAuth` on `POST` endpoints).
+  - Replaced `/finance` and `/jobs` placeholders with `FinancePage.tsx` and `JobsPage.tsx` featuring search, multi-facet filters, KPI cards, `Verified` vs `DEMO` badges, official source links, detail modals, non-advisory / vacancy-integrity notices, and loading/empty/error/`503` states.
+  - Documented in `docs/green-finance-and-jobs.md`, `docs/api-and-models.md`, and `README.md`.
+
+
 

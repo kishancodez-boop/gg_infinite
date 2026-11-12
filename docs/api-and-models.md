@@ -139,4 +139,19 @@ All list endpoints validate query parameters via **Zod** and return a consistent
   - `POST /api/v1/rpo` — Protected by `requireDatabase` (`503`) and fail-closed `requireAdminAuth` (`403`/`401`).
 - See `docs/rpo-tracker.md` for formulas and limitations.
 
+---
+
+## 11. Milestone 10 — Green Finance & Renewable Energy Jobs
+
+- **Models Added:**
+  - `GreenFinanceProgram` (`server/src/models/GreenFinanceProgram.ts`) with `programName`, `institutionName`, `financeCategory`, `supportedProjectTypes`, `borrowerProfiles`, `officialSourceUrl`, `termsNote`, `verificationStatus`, `isDemoData`, `lastVerifiedAt`, and `sourceRef`.
+  - `GreenJobListing` (`server/src/models/GreenJobListing.ts`) with `title`, `organization`, `location`, `stateOrRegion`, `roleCategory`, `requiredSkills`, `experienceLevel`, `employmentType`, `officialSourceUrl`, `postingStatusNote`, `verificationStatus`, `isDemoData`, `lastVerifiedAt`, and `sourceRef`.
+- **Endpoints:**
+  - `GET /api/v1/finance`, `GET /api/v1/finance/:id` (public reads, `requireDatabase`).
+  - `POST /api/v1/finance` (`requireDatabase` + fail-closed `requireAdminAuth`).
+  - `GET /api/v1/jobs`, `GET /api/v1/jobs/:id` (public reads, `requireDatabase`).
+  - `POST /api/v1/jobs` (`requireDatabase` + fail-closed `requireAdminAuth`).
+- See `docs/green-finance-and-jobs.md` for non-advisory guardrails and limitations.
+
+
 
