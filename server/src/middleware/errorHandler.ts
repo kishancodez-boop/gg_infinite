@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
+import mongoose from 'mongoose';
 import { ZodError } from 'zod';
 
 export class AppError extends Error {
@@ -42,6 +43,45 @@ export function errorHandler(
     return;
   }
 
+  if (err instanceof mongoose.Error.ValidationError) {
+    res.status(400).json({
+      error: {
+        code: 'MONGOOSE_VALIDATION_ERROR',
+        message: 'Database schema validation failed',
+        details: Object.values(err.errors).map((e) => ({
+          path: e.path,
+          message: e.message,
+        })),
+      },
+    });
+    return;
+  }
+
+  if (err instanceof mongoose.Error.CastError) {
+    res.status(400).json({
+      error: {
+        code: 'INVALID_IDENTIFIER',
+        message: `Invalid value for ${err.path}`,
+      },
+    });
+    return;
+  }
+
+  if (
+    typeof err === 'object' &&
+    err !== null &&
+    'code' in err &&
+    (err as { code?: unknown }).code === 11000
+  ) {
+    res.status(409).json({
+      error: {
+        code: 'DUPLICATE_RESOURCE',
+        message: 'A record with this unique identifier already exists',
+      },
+    });
+    return;
+  }
+
   if (err instanceof AppError) {
     res.status(err.statusCode).json({
       error: {
@@ -68,4 +108,3 @@ export function errorHandler(
     },
   });
 }
-

@@ -21,3 +21,11 @@
   - Implemented all 7 module route shells (`/`, `/calculator`, `/policies`, `/rpo`, `/finance`, `/jobs`, `/admin`) plus `*` 404 fallback with zero fabricated metrics.
   - Verified frontend Vitest (`13 passed`), backend Vitest + Supertest (`5 passed`), TypeScript typechecks, production builds, and live HTTP probes across all 7 routes and proxied API health/status endpoints.
 
+## Milestone 03 — Backend API Architecture & Data Models
+- **Status:** Completed
+- **Scope & Verified Results:**
+  - Implemented 6 Mongoose models (`DataSource`, `EnergyMetric`, `PolicyScheme`, `RpoRecord`, `IngestionRun`, `AuditProvenance`) with indexes, URL/bounds validation, and `isDemoData` separation.
+  - Added `/api/v1` routes for `sources`, `metrics`, `policies`, `schemes`, `rpo`, and `ingestion-runs` with pagination, filtering, sorting, Zod validation, centralized error handling, and `requireDatabase` (`503 DATABASE_UNAVAILABLE` when MongoDB is disconnected/unconfigured).
+  - Created explicit `npm --prefix server run seed:demo` script (`server/src/scripts/seedDemo.ts`) with `[DEMO]`-labeled fixtures and production/missing-URI safeguards.
+  - Documented API contracts, MongoDB setup, models, and provenance rules in `docs/api-and-models.md`.
+

@@ -1,0 +1,77 @@
+export const VERIFICATION_STATUSES = [
+  'unverified',
+  'needs_review',
+  'verified',
+  'rejected',
+] as const;
+export type VerificationStatus = (typeof VERIFICATION_STATUSES)[number];
+
+export const SOURCE_TYPES = [
+  'central_ministry',
+  'regulator',
+  'state_nodal_agency',
+  'utility_discom',
+  'public_open_data',
+  'research_institute',
+  'other',
+] as const;
+export type SourceType = (typeof SOURCE_TYPES)[number];
+
+export const ACCESS_METHODS = [
+  'api',
+  'csv',
+  'xlsx',
+  'rss',
+  'html_public',
+  'manual',
+] as const;
+export type AccessMethod = (typeof ACCESS_METHODS)[number];
+
+export const GEOGRAPHIC_SCOPES = ['national', 'state', 'region'] as const;
+export type GeographicScope = (typeof GEOGRAPHIC_SCOPES)[number];
+
+export const POLICY_CATEGORIES = [
+  'solar',
+  'wind',
+  'hybrid',
+  'storage',
+  'grid',
+  'efficiency',
+  'general',
+] as const;
+export type PolicyCategory = (typeof POLICY_CATEGORIES)[number];
+
+export const POLICY_RECORD_KINDS = ['policy', 'scheme'] as const;
+export type PolicyRecordKind = (typeof POLICY_RECORD_KINDS)[number];
+
+export const RPO_CATEGORIES = [
+  'solar',
+  'non_solar',
+  'wind',
+  'hpo',
+  'total',
+  'other',
+] as const;
+export type RpoCategory = (typeof RPO_CATEGORIES)[number];
+
+export const INGESTION_STATUSES = [
+  'running',
+  'completed',
+  'partial',
+  'failed',
+  'dry_run',
+] as const;
+export type IngestionStatus = (typeof INGESTION_STATUSES)[number];
+
+export const AUDIT_RECORD_TYPES = [
+  'DataSource',
+  'EnergyMetric',
+  'PolicyScheme',
+  'RpoRecord',
+  'IngestionRun',
+] as const;
+export type AuditRecordType = (typeof AUDIT_RECORD_TYPES)[number];
+
+export const DATA_MODES = ['verified', 'demo', 'all'] as const;
+export type DataMode = (typeof DATA_MODES)[number];
+

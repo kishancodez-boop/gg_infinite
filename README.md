@@ -94,3 +94,9 @@ npm run build       # Builds TypeScript backend and production Vite frontend
 npm test            # Runs Vitest + Supertest tests
 ```
 
+For full API endpoint documentation, Mongoose models, and data provenance rules, see [docs/api-and-models.md](docs/api-and-models.md). To load explicitly labeled `[DEMO]` fixtures once `MONGODB_URI` is configured in development:
+
+```bash
+npm --prefix server run seed:demo
+```
+

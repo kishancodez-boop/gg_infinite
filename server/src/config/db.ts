@@ -42,12 +42,14 @@ function mapReadyState(readyState: number, isConfigured: boolean): DatabaseStatu
 
 /**
  * Connect to MongoDB when MONGODB_URI is provided.
- * If unconfigured or unreachable in development, keeps the API running and reports status accurately.
+ * Uses explicit timeouts and keeps development API operational if MongoDB is unconfigured/unavailable.
  */
 export async function connectDatabase(): Promise<void> {
   if (!env.MONGODB_URI) {
     lastConnectionError = null;
-    console.info('[DB] MONGODB_URI is not configured. Running in API-only mode (database: unconfigured).');
+    console.info(
+      '[DB] MONGODB_URI is not configured. Running in API-only mode (database: unconfigured).'
+    );
     return;
   }
 
@@ -56,6 +58,8 @@ export async function connectDatabase(): Promise<void> {
   try {
     await mongoose.connect(env.MONGODB_URI, {
       serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 5000,
+      socketTimeoutMS: 10000,
     });
     lastConnectionError = null;
   } catch (error) {
@@ -75,6 +79,10 @@ export async function disconnectDatabase(): Promise<void> {
   }
 }
 
+export function isDatabaseConnected(): boolean {
+  return mongoose.connection.readyState === 1;
+}
+
 export function getDatabaseHealth(): DatabaseHealth {
   const configured = Boolean(env.MONGODB_URI);
   const readyState = mongoose.connection.readyState;
@@ -88,4 +96,3 @@ export function getDatabaseHealth(): DatabaseHealth {
     lastError: lastConnectionError,
   };
 }
-
