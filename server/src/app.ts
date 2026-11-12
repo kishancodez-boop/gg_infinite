@@ -13,6 +13,7 @@ export interface CreateAppOptions {
 
 export function createApp(options: CreateAppOptions = {}) {
   const app = express();
+  app.set('trust proxy', 1);
   app.disable('x-powered-by');
 
   app.use((_req, res, next) => {

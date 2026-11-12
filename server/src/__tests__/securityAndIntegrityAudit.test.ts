@@ -2,7 +2,7 @@ import request from 'supertest';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from '../app.js';
 import * as dbConfig from '../config/db.js';
-import { env } from '../config/env.js';
+import { env, parseEnv } from '../config/env.js';
 import { DataSourceModel, StagedRecordModel } from '../models/index.js';
 import { validateFetchUrl } from '../services/rea/permissionGuard.js';
 import { publishApprovedStagedRecord } from '../services/rea/reviewService.js';
@@ -147,5 +147,15 @@ describe('Milestone 14 — Security & Data Integrity Audit', () => {
 
     expect(res.status).toBe(409);
     expect(res.body.error.code).toBe('DUPLICATE_RESOURCE');
+  });
+
+  it('rejects wildcard CORS_ORIGIN in production environment validation', () => {
+    expect(() =>
+      parseEnv({
+        NODE_ENV: 'production',
+        PORT: '10000',
+        CORS_ORIGIN: '*',
+      })
+    ).toThrow(/Wildcard "\*" is not permitted/);
   });
 });

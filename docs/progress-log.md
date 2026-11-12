@@ -91,6 +91,15 @@
   - Added `requireAdminAuth` to `POST /api/v1/metrics` and `POST /api/v1/ingestion-runs`, added defensive security headers and wildcard CORS filtering in `app.ts`, implemented in-memory API rate limiting (`rateLimit.ts`), and blocked publishing `invalid` staged records in `reviewService.ts`.
   - Added regression suite `server/src/__tests__/securityAndIntegrityAudit.test.ts` and documented findings, fixes, and remaining risks in `docs/security-and-data-integrity-audit.md`.
 
+## Milestone 15 — Manual Deployment Preparation
+- **Status:** Completed
+- **Scope & Verified Results:**
+  - Updated root `.env.example` with dev/production separation and safe placeholders (`NODE_ENV`, `PORT`, `CORS_ORIGIN`, `MONGODB_URI`, `ADMIN_API_KEY`, `VITE_API_BASE_URL`).
+  - Updated `server/src/config/env.ts` to reject wildcard `*` in `CORS_ORIGIN` in `production`, added `trust proxy` in `server/src/app.ts`, and updated `server/src/index.ts` startup logging without exposing secrets.
+  - Added Render Blueprint (`render.yaml`) and Vercel SPA rewrite + security header configuration (`client/vercel.json`).
+  - Created `docs/deployment-guide.md` covering environment variables, MongoDB Atlas, Render, Vercel, CORS, health checks, and troubleshooting.
+
+
 
 
 

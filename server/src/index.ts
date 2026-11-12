@@ -11,7 +11,9 @@ async function startServer(): Promise<void> {
 
   const app = createApp();
   server = app.listen(env.PORT, () => {
-    console.info(`[Server] GreenGrid India API listening on http://localhost:${env.PORT}`);
+    console.info(
+      `[Server] GreenGrid India API listening on port ${env.PORT} (env=${env.NODE_ENV}, adminAuth=${Boolean(env.ADMIN_API_KEY)}, dbConfigured=${Boolean(env.MONGODB_URI)})`
+    );
   });
 }
 

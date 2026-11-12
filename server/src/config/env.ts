@@ -21,6 +21,17 @@ const envSchema = z.object({
     .trim()
     .optional()
     .transform((val) => (val && val.length > 0 ? val : undefined)),
+}).superRefine((data, ctx) => {
+  if (data.NODE_ENV === 'production') {
+    const origins = data.CORS_ORIGIN.split(',').map((o) => o.trim());
+    if (origins.includes('*')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['CORS_ORIGIN'],
+        message: 'Wildcard "*" is not permitted in CORS_ORIGIN in production.',
+      });
+    }
+  }
 });
 
 export type AppEnv = z.infer<typeof envSchema>;
