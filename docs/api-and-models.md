@@ -129,4 +129,14 @@ All list endpoints validate query parameters via **Zod** and return a consistent
 - **Query Params:** `dataMode` (`all` | `verified` | `demo`), `stateOrRegion`, `technology` (`all` | `solar` | `wind` | `other`), `fromDate`, `toDate`.
 - See `docs/national-dashboard.md` for aggregation rules, `"Not available"` null handling, and limitations.
 
+---
+
+## 10. Milestone 09 — Renewable Purchase Obligation (RPO) Tracker
+
+- **Model Extended:** `RpoRecord` (`server/src/models/RpoRecord.ts`) with `state`, `discomName`, `targetEnergyMu`, `achievedEnergyMu`, and `lastVerifiedAt`.
+- **Endpoints:**
+  - `GET /api/v1/rpo/summary` — Aggregated KPIs, compliance %, compliance gaps, and source-populated records (`requireDatabase`).
+  - `POST /api/v1/rpo` — Protected by `requireDatabase` (`503`) and fail-closed `requireAdminAuth` (`403`/`401`).
+- See `docs/rpo-tracker.md` for formulas and limitations.
+
 

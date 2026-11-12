@@ -13,6 +13,7 @@ import {
   getMetrics,
   getRpoRecord,
   getRpoRecords,
+  getRpoSummary,
   getSource,
   getSources,
   makePolicyHandlers,
@@ -114,8 +115,14 @@ router.post(
 );
 
 router.get('/rpo', validateRequest({ query: listRpoQuerySchema }), getRpoRecords);
+router.get('/rpo/summary', validateRequest({ query: listRpoQuerySchema }), getRpoSummary);
 router.get('/rpo/:id', validateRequest({ params: idParamSchema }), getRpoRecord);
-router.post('/rpo', validateRequest({ body: createRpoSchema }), postRpoRecord);
+router.post(
+  '/rpo',
+  requireAdminAuth,
+  validateRequest({ body: createRpoSchema }),
+  postRpoRecord
+);
 
 router.get(
   '/ingestion-runs',

@@ -69,4 +69,12 @@
   - Replaced `/` placeholder in `HomePage.tsx` with the full National Dashboard (`DashboardCharts.tsx`, KPI cards, state rankings, recent updates, filters, `DEMO` notices, loading/empty/error/`503` states, and `SystemStatusPanel`).
   - Documented in `docs/national-dashboard.md`, `docs/api-and-models.md`, and `README.md`.
 
+## Milestone 09 — Renewable Purchase Obligation (RPO) Tracker
+- **Status:** Completed
+- **Scope & Verified Results:**
+  - Extended `RpoRecord` model, Zod query/create schemas, and `domainService` with `state`, `discomName`, `targetEnergyMu`, `achievedEnergyMu`, and `lastVerifiedAt`.
+  - Added `rpoAnalyticsService.ts` and `GET /api/v1/rpo/summary` calculating compliance percentage and gaps without treating missing values as zero, and protected `POST /api/v1/rpo` with fail-closed `requireAdminAuth`.
+  - Replaced `/rpo` placeholder with `RpoPage.tsx` and `RpoComparisonChart.tsx` featuring KPI cards, filters, progress bars, source links, `DEMO` notices, and loading/empty/error/`503` states.
+  - Documented in `docs/rpo-tracker.md`, `docs/api-and-models.md`, and `README.md`.
+
 

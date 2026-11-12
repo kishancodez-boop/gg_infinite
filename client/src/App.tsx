@@ -9,6 +9,7 @@ import { CalculatorPage } from './pages/CalculatorPage';
 import { HomePage } from './pages/HomePage';
 import { ModulePlaceholderPage } from './pages/ModulePlaceholderPage';
 import { PoliciesPage } from './pages/PoliciesPage';
+import { RpoPage } from './pages/RpoPage';
 
 const queryClient = new QueryClient();
 
@@ -19,21 +20,7 @@ export function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/calculator" element={<CalculatorPage />} />
         <Route path="/policies" element={<PoliciesPage />} />
-        <Route
-          path="/rpo"
-          element={
-            <ModulePlaceholderPage
-              title="RPO Compliance Tracker"
-              breadcrumbLabel="RPO Tracker"
-              description="Renewable Purchase Obligation targets, reported achievements, and entity/state comparisons backed by authoritative regulatory filings."
-              plannedFeatures={[
-                'Explicit distinction between official regulatory determinations and platform calculations.',
-                'Obligation category breakdown (Solar, Wind, HPO, Other) and compliance period filters.',
-                'Source document links and audit timestamps for every record.',
-              ]}
-            />
-          }
-        />
+        <Route path="/rpo" element={<RpoPage />} />
         <Route
           path="/finance"
           element={

@@ -94,6 +94,13 @@ export const getRpoRecords = asyncHandler(async (req, res) => {
   res.status(200).json(result);
 });
 
+export const getRpoSummary = asyncHandler(async (req, res) => {
+  const query = req.query as unknown as z.infer<typeof listRpoQuerySchema>;
+  const { getRpoTrackerSummary } = await import('../services/rpo/rpoAnalyticsService.js');
+  const summary = await getRpoTrackerSummary(query);
+  res.status(200).json({ data: summary });
+});
+
 export const getRpoRecord = asyncHandler(async (req, res) => {
   const item = await domainService.getRpoRecordById(String(req.params.id));
   res.status(200).json({ success: true, data: item });

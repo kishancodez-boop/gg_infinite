@@ -206,14 +206,38 @@ export async function listRpoRecords(query: z.infer<typeof listRpoQuerySchema>) 
     ...buildDataModeFilter(query.dataMode),
   };
   if (query.verificationStatus) filter.verificationStatus = query.verificationStatus;
+  if (query.entityType) filter.entityType = query.entityType;
   if (query.stateOrOrganization) {
     filter.stateOrOrganization = new RegExp(escapeRegex(query.stateOrOrganization), 'i');
   }
-  if (query.compliancePeriod) filter.compliancePeriod = query.compliancePeriod;
+  if (query.state) {
+    const stateRegex = new RegExp(escapeRegex(query.state), 'i');
+    filter.$or = [{ state: stateRegex }, { stateOrOrganization: stateRegex }];
+  }
+  if (query.discomName) {
+    const discomRegex = new RegExp(escapeRegex(query.discomName), 'i');
+    filter.$and = [
+      ...(Array.isArray(filter.$and) ? filter.$and : []),
+      { $or: [{ discomName: discomRegex }, { stateOrOrganization: discomRegex }] },
+    ];
+  }
+  if (query.compliancePeriod) {
+    filter.compliancePeriod = query.compliancePeriod;
+  }
   if (query.category) filter.category = query.category;
   if (query.search) {
     const regex = new RegExp(escapeRegex(query.search), 'i');
-    filter.$or = [{ stateOrOrganization: regex }, { compliancePeriod: regex }];
+    filter.$and = [
+      ...(Array.isArray(filter.$and) ? filter.$and : []),
+      {
+        $or: [
+          { stateOrOrganization: regex },
+          { state: regex },
+          { discomName: regex },
+          { compliancePeriod: regex },
+        ],
+      },
+    ];
   }
 
   return executePaginatedQuery<RpoRecordDocument>({

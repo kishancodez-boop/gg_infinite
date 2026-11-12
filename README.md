@@ -2,7 +2,7 @@
 
 **GreenGrid India** is an India-focused Renewable Energy Intelligence & Opportunity Platform designed to bring fragmented public renewable-energy data, policies, solar ROI tools, RPO insights, green finance, and green career opportunities into one trustworthy, source-attributed interface.
 
-> **Current Status:** Milestones 00–08 Complete — Foundation, Eco-Tech Design System & Shell, Backend API & Models, Official Data Source Registry, REA Safe Data Ingestion Engine, Policies & Government Schemes Explorer, Solar ROI Calculator & Financial Simulator, and National Renewable Energy Dashboard.
+> **Current Status:** Milestones 00–09 Complete — Foundation, Eco-Tech Design System & Shell, Backend API & Models, Official Data Source Registry, REA Safe Data Ingestion Engine, Policies & Government Schemes Explorer, Solar ROI Calculator, National Renewable Energy Dashboard, and RPO Compliance Tracker.
 
 ---
 

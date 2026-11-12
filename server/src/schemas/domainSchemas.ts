@@ -114,8 +114,13 @@ export const createPolicySchema = z.object({
 });
 
 export const listRpoQuerySchema = baseListQuerySchema.extend({
-  sortBy: z.enum(['compliancePeriod', 'createdAt', 'targetPercentage']).default('createdAt'),
+  sortBy: z
+    .enum(['compliancePeriod', 'createdAt', 'targetPercentage', 'reportedPercentage'])
+    .default('createdAt'),
   stateOrOrganization: z.string().trim().max(200).optional(),
+  state: z.string().trim().max(120).optional(),
+  discomName: z.string().trim().max(200).optional(),
+  entityType: z.enum(['state', 'discom', 'utility', 'other']).optional(),
   compliancePeriod: z.string().trim().max(60).optional(),
   category: z.enum(RPO_CATEGORIES).optional(),
 });
@@ -123,10 +128,15 @@ export const listRpoQuerySchema = baseListQuerySchema.extend({
 export const createRpoSchema = z.object({
   stateOrOrganization: z.string().trim().min(2).max(200),
   entityType: z.enum(['state', 'discom', 'utility', 'other']).default('state'),
+  state: z.string().trim().max(120).optional().nullable(),
+  discomName: z.string().trim().max(200).optional().nullable(),
   compliancePeriod: z.string().trim().min(2).max(60),
   category: z.enum(RPO_CATEGORIES).default('total'),
   targetPercentage: z.number().min(0).max(100),
   reportedPercentage: z.number().min(0).max(100).optional().nullable(),
+  targetEnergyMu: z.number().min(0).optional().nullable(),
+  achievedEnergyMu: z.number().min(0).optional().nullable(),
+  lastVerifiedAt: z.coerce.date().optional().nullable(),
   sourceRef: objectIdSchema,
   verificationStatus: z.enum(VERIFICATION_STATUSES).default('unverified'),
   isDemoData: z.boolean().default(false),

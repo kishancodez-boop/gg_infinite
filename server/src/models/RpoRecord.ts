@@ -15,6 +15,18 @@ const rpoRecordSchema = new Schema(
       enum: ['state', 'discom', 'utility', 'other'],
       default: 'state',
     },
+    state: {
+      type: String,
+      trim: true,
+      maxlength: 120,
+      default: null,
+    },
+    discomName: {
+      type: String,
+      trim: true,
+      maxlength: 200,
+      default: null,
+    },
     compliancePeriod: {
       type: String,
       required: [true, 'compliancePeriod is required'],
@@ -38,6 +50,20 @@ const rpoRecordSchema = new Schema(
       default: null,
       min: [0, 'reportedPercentage cannot be negative'],
       max: [100, 'reportedPercentage cannot exceed 100'],
+    },
+    targetEnergyMu: {
+      type: Number,
+      default: null,
+      min: [0, 'targetEnergyMu cannot be negative'],
+    },
+    achievedEnergyMu: {
+      type: Number,
+      default: null,
+      min: [0, 'achievedEnergyMu cannot be negative'],
+    },
+    lastVerifiedAt: {
+      type: Date,
+      default: null,
     },
     sourceRef: {
       type: Schema.Types.ObjectId,
