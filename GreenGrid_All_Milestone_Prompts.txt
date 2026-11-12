@@ -1,0 +1,144 @@
+# GreenGrid India — Complete Milestone Prompt Pack
+
+This pack contains sequential prompts for Milestones 00–17. Use one milestone prompt at a time, in order. Do not paste all prompts into the coding agent in one request.
+
+## How to use
+1. Open the GreenGrid India repository folder in your coding agent (Cursor, Claude Code, Codex, OpenCode, or another repository-aware agent).
+2. Make sure `memory.md`, `skill.md`, and `FINAL_MASTER_PROMPT.md` are in the repository root. If not, copy them there first.
+3. Open `milestone_00_prompt.md`, select all text, and copy it.
+4. Paste the prompt into the agent's chat/input box and press Enter/Send. In agent mode, allow it to inspect and edit files.
+5. Review its plan and approve any permission prompts for file edits, terminal commands, and dependency installation that you are comfortable allowing.
+6. Wait for the agent to finish. Ask it to run the tests/builds and show actual results.
+7. Review the summary and verify the app. Then open the next milestone prompt file and repeat.
+8. If the agent stops early, send: `Continue implementing the current milestone from the remaining tasks. Do not repeat completed work. Run verification and report actual results.`
+9. If an error occurs, paste the full error and ask the agent to fix it before moving on.
+10. Keep a backup or Git commit before each major milestone.
+
+## Important operating rules
+- Run only one milestone at a time.
+- Milestone 00 is discovery/planning and waits for approval before structural changes.
+- Milestone 01 onward instructs the agent to implement the selected milestone.
+- Do not claim a milestone is complete until its acceptance criteria and verification pass.
+- MongoDB credentials and hosting credentials must be supplied securely by you; never paste secrets into public repositories.
+- The project intentionally excludes CI/CD and GitHub Actions.
+- REA means Reverse Engineering Agent. It must use permitted sources and human review; never bypass access controls.
+- Use clearly labelled demo data when live official data is unavailable. Never present demo data as verified national statistics.
+- Milestones 12–17 are quality, demo, security, deployment preparation, presentation, and handover work. They do not replace earlier feature milestones.
+
+## Recommended sequence
+00 Discovery → 01 Foundation → 02 UI shell → 03 API/data models → 04 Source registry → 05 REA ingestion → 06 Policies/schemes → 07 Solar ROI → 08 Dashboard → 09 RPO tracker → 10 Finance/jobs → 11 Admin/review → 12 Demo mode → 13 QA → 14 Security/data integrity → 15 Manual deployment prep → 16 Presentation → 17 Final acceptance.
+
+## If your coding agent asks what to do
+Say: `Implement the current milestone in the repository. Inspect existing work first, preserve working code, execute the changes, run verification, fix failures, and report actual results. Do not just provide instructions.`
+
+
+================================================================================
+
+
+## MILESTONE 00: Repository Discovery and Project Planning
+
+You are the senior full-stack architect for GreenGrid India. Read memory.md, skill.md, FINAL_MASTER_PROMPT.md, and all existing project documentation before changing code. Inspect the complete repository, package manager, existing code, environment, and current Git status. Do not overwrite working code. Compare the repository against the GreenGrid India requirements and produce a milestone-by-milestone implementation plan, dependency map, risks, and acceptance criteria. Identify missing credentials and external dependencies. Do not invent data or claim features exist when they do not. Do not implement future milestones yet. If the repository is empty, recommend the exact foundation structure. Report findings and wait for my approval before making structural changes.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 01: Full-Stack Project Foundation
+
+Implement Milestone 1 end to end in the repository. Read memory.md and skill.md first. Set up or repair the React + TypeScript + Vite frontend, Tailwind CSS, React Router, Lucide, Framer Motion, TanStack Query, and Axios. Set up the Node.js + Express + TypeScript backend with modular routes/controllers/services/models/middleware/config. Integrate MongoDB with Mongoose, supporting local MongoDB and Atlas through environment variables. Never hardcode secrets or commit .env. Implement /api/health and /api/v1/system/status, accurate frontend/backend/database status indicators, centralized errors, graceful shutdown, root scripts to run both apps, .env.example files, .gitignore, and clear README setup instructions. Add appropriate tests, type checks, and production builds. Do not implement business modules or REA yet. Do not implement CI/CD or GitHub Actions. Execute the work; do not stop at a plan. If MongoDB is unavailable, report it honestly rather than faking a connection. Finish with actual test/build results and blockers.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 02: Design System, Application Shell and Navigation
+
+Implement Milestone 2. First inspect the existing application and preserve working functionality. Build the polished GreenGrid India application shell using the design tokens in memory.md: forest green #102A25, renewable green #16A36A, solar amber #F4B942, background #F5F8F5, white surfaces, text #17231F, muted #64736B, border #DCE6DF. Create responsive desktop/mobile navigation, header, sidebar or mobile navigation, page container, breadcrumbs where useful, reusable cards, buttons, badges, tables, forms, skeletons, empty states, error states, and accessible dialogs. Add routes/placeholders for National Dashboard, Solar ROI, Policies & Schemes, RPO Tracker, Green Finance, Green Jobs, and Admin/REA. Use consistent typography, spacing, responsive behavior, keyboard accessibility, and restrained Framer Motion. Avoid fake metrics presented as real. Add visual/component tests where practical, run type checks and builds, and report completed routes and remaining gaps. Do not implement full business logic for later modules.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 03: Backend API Architecture and Data Models
+
+Implement Milestone 3. Review memory.md and skill.md. Design a maintainable modular Express API for GreenGrid India. Define domain modules and Mongoose schemas for renewable data sources, policies, schemes, energy metrics, RPO records, solar assumptions/calculations if persistence is needed, finance opportunities, green jobs, ingestion runs, review decisions, and audit/provenance records. Keep schemas normalized enough for the use cases; avoid overengineering. Add DTOs/request validation, pagination, filtering, sorting, consistent API response/error format, service/controller separation, indexes, timestamps, and safe configuration. Add seed scripts only for clearly labelled demo data; never imply sample data is live official data. Add API documentation or a concise endpoint catalogue. Write model/service/route tests. Run tests, type checks, and builds. Do not build all frontend pages yet and do not add CI/CD.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 04: Official Data Source Registry
+
+Implement Milestone 4: a source registry for GreenGrid India. Create a maintainable catalogue of candidate official Indian renewable-energy sources relevant to MNRE, government schemes, policies, national/state energy statistics, RPO regulations, DISCOM/REC information, public finance programs, and green jobs. Verify source URLs and permitted access methods before adding them; prefer official APIs, downloadable CSV/XLSX/JSON, RSS, and openly accessible pages. Do not bypass authentication, CAPTCHA, paywalls, robots restrictions, or terms. Store source name, organization, canonical URL, domain, data category, allowed method, expected format, update cadence if documented, access notes, active status, and last-checked timestamp. Include admin CRUD/list/filter APIs and UI if the admin shell exists. Clearly distinguish verified sources from candidates requiring human verification. Do not scrape yet. Add tests and report sources that could not be verified.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 05: REA Safe Ingestion Engine
+
+Implement Milestone 5: REA means Reverse Engineering Agent in this project. Build a controlled ingestion pipeline: Source Registry → Permission Check → Fetch → Parse → Normalize → Validate → Deduplicate → Confidence/change detection → Human Review → Publish → Audit. Start with one or two official sources that have a clearly permitted downloadable/API format. Support dry-run and idempotent runs. Respect rate limits and terms; never bypass access controls. Use deterministic parsers for CSV/XLSX/JSON/API data. AI may assist with document interpretation or field mapping but must not fabricate values. Preserve provenance for every record: source organization, source URL, retrieval time, publication date if available, extraction method, confidence, verification status, and raw-source reference where legally appropriate. Add ingestion run logs, validation errors, duplicate detection, change detection, retry safety, and human approval before publication. Provide admin visibility into run status and rejected records. Add tests with fixtures and failure cases. If external source access is blocked, build the pipeline using a clearly labelled local fixture and report the limitation; do not claim a live source was ingested.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 06: Policies and Government Schemes Explorer
+
+Implement Milestone 6: Policies & Schemes Explorer. Build backend APIs and responsive frontend for searching, filtering, viewing, and comparing renewable-energy policies and government schemes. Include category, state/central scope, stakeholder eligibility, sector, application status, dates, benefits, required documents, official source link, last verified date, and provenance where available. Use only verified official information or explicitly labelled demo fixtures. Do not invent eligibility, subsidy amounts, deadlines, or benefits. Provide clear labels for active, expired, draft, and unverified information based on evidence. Include source links and last-verified metadata on detail pages. Add loading, empty, error, and mobile states; tests for filtering, sorting, pagination, and API behavior. If source data is incomplete, display unknown rather than guessing.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 07: Solar ROI Calculator
+
+Implement Milestone 7: Solar ROI Calculator for Indian users. Create an accessible calculator that accepts location/state, monthly electricity bill or consumption, tariff, proposed system capacity or roof area, installation cost assumptions, subsidy inputs only when verified, self-consumption assumptions, and optional financing inputs. Clearly separate user-entered assumptions, configurable defaults, and verified official inputs. Calculate estimated system size, annual generation, bill savings, payback period, lifetime savings, and emissions estimate using documented formulas and explicit assumptions. Handle units, invalid values, zero/negative inputs, and missing data. Do not guarantee savings or present estimates as quotations. Do not invent current installation prices or subsidy eligibility. Show a transparent breakdown, assumptions, disclaimer, and downloadable/shareable result if practical. Add unit tests for formulas and edge cases, plus frontend tests. Make it clear results are estimates and depend on location, roof, utility tariff, installer quote, and policy eligibility.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 08: National Renewable Energy Dashboard
+
+Implement Milestone 8: National Energy Dashboard. Build an evidence-based dashboard with national and state-level renewable-energy indicators only where sourced data is available. Include source-aware KPI cards, trend charts, state comparisons, technology mix, capacity/generation trends, and filters for geography, technology, and time period where supported by the dataset. Every metric must expose units, period, geography, source, retrieval/publication date, and verification status. Distinguish capacity from generation and avoid mixing incompatible reporting periods. Never fabricate missing numbers or present demo fixtures as live statistics. Provide a DEMO MODE banner and dataset provenance when demo data is active. Add responsive charts, accessible labels, loading/empty/error states, API tests, and tests for aggregation and filtering. If official data is not yet available, show a useful empty state and explain how to load a verified dataset.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 09: RPO Tracker and Compliance Workspace
+
+Implement Milestone 9: RPO information and compliance tracker. Build a tracker for obligations and reported performance only when the applicable regulation, state, obligated entity, period, and data source are verified. Model regulatory category, applicable entity, target, compliance period, reported renewable energy/REC values, source, evidence, status, and review history. Clearly distinguish official reported values from user-entered or demo values. Do not provide legal advice or infer compliance from incomplete records. Include filters by state, entity, period, and category; summary views; evidence links; and an audit trail. Add role-aware access if authentication already exists; otherwise keep admin actions clearly marked as prototype-only and do not claim secure role enforcement. Add calculation validation, tests, and source citations/links in the UI.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 10: Green Finance and Green Jobs Directory
+
+Implement Milestone 10: Green Finance and Green Jobs. Create searchable directories for verified finance opportunities and green-sector jobs. Finance records should include provider, instrument/program, eligible applicant, sector, geography, amount/range only when sourced, terms only when verified, deadlines, official application link, source, and last verified date. Job records should include employer, role, location, skills, experience, work type, posting date, application URL, source, and verification status. Prefer official provider/employer pages and permitted feeds. Do not invent open positions, interest rates, loan terms, deadlines, or eligibility. Mark expired/unverified records clearly and provide filters, detail pages, saved-item capability only if implemented properly, and empty/loading/error states. Add tests for filtering and data validation.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 11: Admin Console, Review and Audit
+
+Implement Milestone 11: Admin and data governance console. Provide a secure, auditable workflow for managing sources, ingestion runs, validation failures, proposed changes, review queues, published records, and audit logs. If authentication and authorization are not yet implemented, implement them before exposing privileged actions; never rely on hiding buttons in the frontend. Use least privilege, server-side authorization, input validation, and immutable audit events for important changes. Provide reviewer actions approve, reject, request correction, and view provenance/diffs. Keep destructive operations guarded and logged. Add tests for unauthorized access, validation, approval/rejection, and audit event creation. Do not claim enterprise-grade security without verification.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 12: Demo Mode and Reliable Offline Hackathon Demo
+
+Implement a deliberate DEMO MODE for hackathon judging. Provide a small, internally consistent sample dataset for dashboard, policies/schemes, RPO, finance, and jobs. Clearly label every demo record and all screens using demo data. Keep demo fixtures separate from verified production/source-ingested data. The app must still demonstrate core flows when external websites or APIs are unavailable. Include a simple environment/configuration switch or explicit admin setting to select demo mode. Ensure demo data cannot be mistaken for official live statistics. Add a visible demo banner, dataset explanation, reset/seed command, and tests confirming demo/verified data separation.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 13: Testing, Accessibility and Quality Assurance
+
+Implement Milestone 13 quality pass. Audit the complete application against the requirements in memory.md and skill.md. Add or complete Vitest tests for frontend logic/components and backend unit/integration tests with Supertest. Add Playwright end-to-end tests for critical user journeys: app load, navigation, dashboard filters, Solar ROI calculation, policies search/details, and demo mode. Test loading, empty, error, and responsive behavior. Check accessibility basics: semantic HTML, keyboard navigation, labels, contrast, focus states, and chart descriptions. Fix actual bugs found. Run lint, type checks, tests, and production builds. Report exact commands and pass/fail counts; never fabricate results. Do not add CI/CD or GitHub Actions.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 14: Security, Privacy and Data Integrity Review
+
+Perform a security and data-integrity review of GreenGrid India. Inspect secrets handling, environment files, CORS, input validation, API authorization, MongoDB access, injection risks, error leakage, logging of personal data, file upload handling if present, dependency risks, and admin endpoints. Verify source ingestion respects permissions, rate limits, and website terms. Ensure external content is treated as untrusted data and never as executable instructions. Check provenance, timestamps, verification status, demo-data separation, and auditability. Fix high-confidence issues directly; document anything requiring credentials, infrastructure, or human policy decisions. Do not claim compliance certifications or penetration testing unless actually performed. Run relevant tests after fixes.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 15: Deployment Preparation (No CI/CD)
+
+Prepare GreenGrid India for a straightforward manual deployment suitable for a student hackathon. Do not create CI/CD, GitHub Actions, or automated deployment pipelines. Inspect current hosting compatibility and provide a manual deployment guide for the selected frontend/backend hosting and MongoDB Atlas. Configure production environment variable examples, frontend API base URL, backend CORS origins, health checks, build/start commands, and safe production defaults. Do not deploy or expose secrets without explicit authorization. If deployment credentials are unavailable, prepare configuration and explain the exact manual steps. Verify production builds locally and document known limitations.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 16: Hackathon Presentation and Judge Demo
+
+Prepare the application for a 5–7 minute hackathon presentation. Build or refine a presentation mode/page containing the problem, stakeholders, solution modules, architecture, REA workflow, data trust/provenance, impact, limitations, and future scope. Create a concise live demo script with a reliable sequence: open dashboard/demo banner, inspect a source-backed record, explore policies/schemes, run Solar ROI with visible assumptions, show REA ingestion/review workflow using a permitted source or clearly labelled fixture, and close with impact. Prepare likely judge questions and truthful answers. Clearly distinguish implemented features, demo-only features, planned features, and verified live data. Do not exaggerate coverage, partnerships, savings, compliance, or AI autonomy.
+
+--------------------------------------------------------------------------------
+
+## MILESTONE 17: Final End-to-End Acceptance and Handover
+
+Perform the final GreenGrid India acceptance audit. Read the project documentation and compare the implementation against every milestone and definition of done. Run the application from a clean install where possible, execute tests, type checks, lint, and production builds, and verify core end-to-end journeys. Check all navigation links, API integrations, database behavior, demo mode, source provenance, responsive layouts, and error states. Fix release-blocking defects. Create/update README with prerequisites, setup, environment variables, seed/demo instructions, run/test/build commands, architecture, modules, known limitations, and deployment notes. Create a final implementation report listing each milestone as complete, partial, or not started with evidence. Never claim completion without verification. Do not add CI/CD.
+
+--------------------------------------------------------------------------------
